@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import WriteupLayout from '@/layouts/WriteupLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('writeups');
+  return entries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<WriteupLayout frontmatter={entry.data}>
+  <Content />
+</WriteupLayout>
