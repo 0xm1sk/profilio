@@ -15,7 +15,7 @@ const research = await getCollection('research');
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {research.length > 0 ? (
         research.map(entry => (
-          <a href={`/research/${entry.slug}`} class="p-6 hover:text-white transition-all group relative overflow-hidden">
+          <a href={`/profilio/research/${entry.slug}`} class="p-6 hover:text-white transition-all group relative overflow-hidden">
             <div class="flex justify-between items-start mb-3">
               <h2 class="font-bold text-white group-hover:text-terminal-phosphor text-lg">{entry.data.title}</h2>
               <span class="text-[10px] text-terminal-dim uppercase border border-terminal-dim px-1">{entry.data.status}</span>
