@@ -15,7 +15,7 @@ const tools = await getCollection('tools');
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {tools.length > 0 ? (
         tools.map(tool => (
-          <a href={`/tools/${tool.slug}`} class="terminal-border terminal-bg p-6 hover:border-terminal-phosphor transition-all group">
+          <a href={`/profilio/tools/${tool.slug}`} class="terminal-border terminal-bg p-6 hover:border-terminal-phosphor transition-all group">
             <div class="flex justify-between items-start mb-3">
               <h2 class="font-bold text-white group-hover:text-terminal-phosphor text-lg">{tool.data.title}</h2>
               <span class="text-[10px] text-terminal-dim uppercase border border-terminal-dim px-1">{tool.data.category}</span>

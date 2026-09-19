@@ -15,7 +15,7 @@ const projects = await getCollection('projects');
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {projects.length > 0 ? (
         projects.map(project => (
-          <a href={`/projects/${project.slug}`} class="terminal-border terminal-bg p-6 hover:bg-terminal-phosphor hover:text-terminal-black transition-all group">
+          <a href={`/profilio/projects/${project.slug}`} class="terminal-border terminal-bg p-6 hover:bg-terminal-phosphor hover:text-terminal-black transition-all group">
             <div class="flex justify-between items-start mb-3">
               <h2 class="font-bold text-white group-hover:text-terminal-black text-lg">{project.data.title}</h2>
               <span class="text-[10px] text-terminal-dim group-hover:text-terminal-black uppercase border border-terminal-dim px-1">{project.data.category}</span>
