@@ -1,18 +1,17 @@
-# 🌑 m1sk | Technical Portfolio
+# 🌑 0xm1sk | Digital Archive
 
-A minimalist, terminal-themed digital identity and knowledge base for a security researcher in training.
+Low-level security research, memory corruption, and binary exploitation.
 
-## 🛠️ Architecture
-- **Framework:** [Astro](https://astro.build/)
-- **Styling:** Tailwind CSS
-- **Deployment:** GitHub Pages via GitHub Actions
+## /core
+- **Notes:** Atomic references on x86-64 and the stack.
+- **Research:** Investigations into memory corruption and OS mitigations.
+- **Writeups:** CTF solve paths and logic failures.
+- **Projects:** Tools built for the trade.
 
-## 📚 Content
-This portfolio serves as a living archive of:
-- **Notes:** Atomic technical references on x86-64 architecture and memory corruption.
-- **Research:** Deep-dives into binary exploitation and OS mitigations.
-- **Writeups:** Walkthroughs of CTF challenges.
-- **Projects:** Custom security tools and implementations.
+## /philosophy
+I don't care about the tools; I care about the systems. Binary exploitation is the art of finding the exact moment a program's logic fails and making that failure reliable. 
 
-## 🎯 Philosophy
-Focus on the underlying systems rather than the tools. Understanding the exact moment a program's logic fails is the key to reliable exploitation.
+The path to the solve is the only part that matters.
+
+## /stack
+Astro + Tailwind + GitHub Actions.
