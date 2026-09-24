@@ -4,34 +4,37 @@ const { frontmatter } = Astro.props;
 ---
 
 <MainLayout>
-  <article class="max-w-3xl mx-auto py-12 px-4 font-sans">
-    <header class="mb-12 border-b border-terminal-dim pb-8">
-      <div class="flex items-center gap-2 text-xs text-terminal-dim mb-4">
-        <span class="bg-terminal-gray px-2 py-0.5 rounded text-terminal-phosphor">{frontmatter.category}</span>
-        <span class="text-terminal-dim">|</span>
-        <span class="text-terminal-dim">{frontmatter.date}</span>
+  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
+    <header class="mb-12 border-b border-terminal-dim pb-6">
+      <div class="flex gap-3 mb-4">
+        <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1">
+          {frontmatter.category}
+        </span>
+        <span class="text-xs text-terminal-dim">
+          {frontmatter.date}
+        </span>
       </div>
-      <h1 class="text-4xl font-bold text-white mb-6 glow-text leading-tight">{frontmatter.title}</h1>
+      <h1 class="text-4xl font-bold glow-text mb-6">{frontmatter.title}</h1>
       
       <div class="flex flex-wrap gap-2 mb-8">
         {frontmatter.tech_stack && frontmatter.tech_stack.map(tech => (
-          <span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">{tech}</span>
+          <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">{tech}</span>
         ))}
         {frontmatter.tags && frontmatter.tags.map(tag => (
-          <span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">{tag}</span>
+          <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">{tag}</span>
         ))}
       </div>
 
       {frontmatter.github && (
-        <a href={frontmatter.github} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-terminal-phosphor hover:underline mb-4">
+        <a href={frontmatter.github} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-terminal-phosphor hover:text-white transition-colors mb-4">
           <span>View Source on GitHub</span>
           <span class="text-xs">↗</span>
         </a>
       )}
     </header>
     
-    <div class="text-white leading-relaxed space-y-6 whitespace-pre-wrap">
+    <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">
       <slot />
     </div>
-  </article>
+  </div>
 </MainLayout>
