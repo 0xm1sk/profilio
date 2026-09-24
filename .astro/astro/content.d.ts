@@ -325,6 +325,27 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"dep-nx.md": {
+	id: "dep-nx.md";
+  slug: "dep-nx";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"network-architecture.md": {
+	id: "network-architecture.md";
+  slug: "network-architecture";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"osi-model.md": {
+	id: "osi-model.md";
+  slug: "osi-model";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "rip.md": {
 	id: "rip.md";
   slug: "rip";
