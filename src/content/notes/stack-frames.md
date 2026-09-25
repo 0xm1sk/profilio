@@ -15,6 +15,6 @@ When a function is called, a **Stack Frame** is created to store local variables
 
 ## Buffer Overflows
 The overflow path:
-Input Overflow -> Overwrite Local Vars -> Overwrite Saved RBP -> Overwrite Return Address.
+Input Overflow ->#45;->gt; Overwrite Local Vars ->#45;->gt; Overwrite Saved RBP ->#45;->gt; Overwrite Return Address.
 
-**Result:** Controlled Return Address -> Hijacked RIP -> Control of Execution.
+**Result:** Controlled Return Address ->#45;->gt; Hijacked RIP ->#45;->gt; Control of Execution.
