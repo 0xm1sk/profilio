@@ -16,7 +16,7 @@ This research entry documents an investigation into how memory corruption allows
 **The Question:** What happens to the CPU's instruction pointer (RIP) when a buffer is overflowed, and how can we determine the exact distance required to achieve control?
 
 **The Hypothesis:** 
-Input Length > Buffer Size ->#45;->gt; Overwrite Adjacent Memory ->#45;->gt; Overwrite Saved RIP ->#45;->gt; Redirect Execution.
+Input Length > Buffer Size ->Overwrite Adjacent Memory ->Overwrite Saved RIP ->Redirect Execution.
 
 ## Methodology
 To isolate the vulnerability, a controlled environment was established:
@@ -35,7 +35,7 @@ Execution within **GDB** using cyclic patterns to monitor the state of the stack
 ## Observation & Evidence
 By monitoring the **RSP** (Stack Pointer) and **RIP** (Instruction Pointer), the following sequence was observed:
 
-**Normal State** ->#45;->gt; **Buffer Overflow** ->#45;->gt; **Segmentation Fault**
+**Normal State** ->**Buffer Overflow** ->**Segmentation Fault**
 
 **The Evidence:** 
 Checking the registers in GDB revealed that RIP had been overwritten with `0x41414141` (the hex representation of 'AAAA'). This is the definitive proof that the input successfully reached and replaced the return address.
