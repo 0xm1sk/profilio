@@ -1,9 +1,13 @@
 ---
+# Updated: 2026-09-25 10:15
+---
 title: "Object-Oriented Programming (OOP) in Java"
 date: 2026-09-25
 category: "Programming"
 tags: ["java", "oop", "software-design", "architecture"]
 description: "A comprehensive guide to the pillars of OOP: Abstraction, Encapsulation, Inheritance, and Polymorphism."
+---
+# Updated: 2026-09-25 10:15
 ---
 # Object-Oriented Programming (OOP) in Java
 
@@ -52,7 +56,9 @@ Polymorphism allows a single action to behave differently depending on the objec
 ## Summary Table
 
 | Concept | Key Idea | Analogy |
-| :--- | :--- | :--- |
+| :---
+# Updated: 2026-09-25 10:15
+--- | :--- | :--- |
 | **Class** | Blueprint | Architectural plan |
 | **Object** | Instance | The actual house |
 | **Constructor** | Initialization | Construction crew |
