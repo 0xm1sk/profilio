@@ -1,0 +1,37 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const writeups = await getCollection('writeups');
+---
+
+<MainLayout>
+  <div class="max-w-5xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
+    <header class="mb-12 border-b border-terminal-dim pb-6">
+      <h1 class="text-3xl font-bold glow-text mb-2">/writeups</h1>
+      <p class="text-lg text-zinc-400">Proof-of-work. Technical breakdowns of labs, CTFs, and exploits.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {writeups.length > 0 ? (
+        writeups.map(entry => (
+          <a href={`/profilio/writeups/${entry.slug}`} class="p-6 hover:text-white transition-all group relative overflow-hidden">
+            <div class="flex justify-between items-start mb-3">
+              <h2 class="font-bold text-white group-hover:text-terminal-phosphor text-lg">{entry.data.title}</h2>
+              <span class="text-[10px] text-terminal-dim uppercase border border-terminal-dim px-1">{entry.data.difficulty}</span>
+            </div>
+            <p class="text-sm text-zinc-400 group-hover:text-zinc-300 mb-4 line-clamp-2">
+              {entry.data.description}
+            </p>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-terminal-dim">Target:</span>
+              <span class="text-white">{entry.data.target}</span>
+            </div>
+          </a>
+        ))
+      ) : (
+        <p class="text-terminal-dim italic">No writeups found. Solving challenges...</p>
+      )}
+    </div>
+  </div>
+</MainLayout>

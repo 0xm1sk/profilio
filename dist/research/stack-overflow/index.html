@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.BcuxfC92.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active
+</div> </nav> <main>  <article class="max-w-3xl mx-auto py-12 px-4 font-sans"> <header class="mb-12 border-b border-terminal-dim pb-8"> <div class="flex items-center gap-2 text-xs text-terminal-dim mb-4"> <span class="bg-terminal-gray px-2 py-0.5 rounded text-terminal-phosphor">Binary Exploitation</span> <span class="text-terminal-dim">|</span> <span class="text-terminal-dim">Sat Sep 19 2026 01:00:00 GMT+0100 (Central European Standard Time)</span> </div> <h1 class="text-4xl font-bold text-white mb-6 glow-text leading-tight">The Anatomy of a Stack Overflow</h1> <div class="flex flex-wrap gap-2 mb-8"> <span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">x86-64</span><span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">stack-overflow</span><span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">gdb</span><span class="text-[10px] border border-terminal-dim px-2 py-0.5 text-terminal-dim">memory-corruption</span> </div> </header> <div class="text-white leading-relaxed space-y-6 whitespace-pre-wrap">  <h1 id="the-anatomy-of-a-stack-overflow">The Anatomy of a Stack Overflow</h1>
+<p>This research entry documents an investigation into how memory corruption allows a researcher to hijack the control flow of a program.</p>
+<h2 id="objective">Objective</h2>
+<p><strong>The Question:</strong> What happens to the CPU’s instruction pointer (RIP) when a buffer is overflowed, and how can we determine the exact distance required to achieve control?</p>
+<p><strong>The Hypothesis:</strong>
+Input Length > Buffer Size -> Overwrite Adjacent Memory -> Overwrite Saved RIP -> Redirect Execution.</p>
+<h2 id="methodology">Methodology</h2>
+<p>To isolate the vulnerability, a controlled environment was established:</p>
+<h3 id="1-the-target">1. The Target</h3>
+<p>A simple C program featuring a fixed-size buffer and a vulnerable function call (e.g., <code>gets()</code>).</p>
+<h3 id="2-the-environment">2. The Environment</h3>
+<p>Compiled with specific flags to disable modern security mitigations:</p>
+<ul>
+<li><code>-fno-stack-protector</code>: Disables the stack canary.</li>
+<li><code>-no-pie</code>: Disables Position Independent Executable (fixed binary address).</li>
+</ul>
+<h3 id="3-the-process">3. The Process</h3>
+<p>Execution within <strong>GDB</strong> using cyclic patterns to monitor the state of the stack and identify the crash point.</p>
+<h2 id="observation--evidence">Observation &#x26; Evidence</h2>
+<p>By monitoring the <strong>RSP</strong> (Stack Pointer) and <strong>RIP</strong> (Instruction Pointer), the following sequence was observed:</p>
+<p><strong>Normal State</strong> -> <strong>Buffer Overflow</strong> -> <strong>Segmentation Fault</strong></p>
+<p><strong>The Evidence:</strong>
+Checking the registers in GDB revealed that RIP had been overwritten with <code>0x41414141</code> (the hex representation of ‘AAAA’). This is the definitive proof that the input successfully reached and replaced the return address.</p>
+<h2 id="analysis">Analysis</h2>
+<p>The distance between the start of the buffer and the return address is known as the <strong>offset</strong>.</p>
+<p><strong>The calculation:</strong>
+Buffer Size + Padding/Saved RBP = Offset to RIP</p>
+<p>By calculating this offset, we can precisely place a target address (e.g., a <code>win()</code> function) exactly where the CPU expects the return address to be.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The experiment confirms that without stack canaries and PIE, the return address is a vulnerable point of control. This provides the foundation for <strong>Return-Oriented Programming (ROP)</strong>, where multiple “gadgets” are chained to bypass non-executable memory (NX).</p>
+<hr>
+<p><strong>Competency:</strong> Binary Analysis
+<em>Understanding the relationship between high-level code, assembly execution, and memory layout.</em></p>  </div> </article>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

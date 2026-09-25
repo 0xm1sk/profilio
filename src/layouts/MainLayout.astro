@@ -1,0 +1,33 @@
+---
+const { title = "m1sk@offsec" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-terminal-black text-zinc-300 font-mono">
+    <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono">
+      <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim">
+        <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono">
+          <span class="text-terminal-dim">&larr;</span>
+          <span>Home</span>
+        </a>
+        <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+          Session Active | v1.0.1
+        </div>
+      </nav>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50">
+        <p>(c) 2026 m1sk // EOF</p>
+      </footer>
+    </div>
+  </body>
+</html>

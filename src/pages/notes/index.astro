@@ -1,0 +1,37 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const rawNotes = await getCollection('notes');
+
+const notes = rawNotes.map(entry => {
+  const body = entry.body || '';
+  return {
+    ...entry,
+    snippet: body.slice(0, 100).replace(/[#*`]/g, '')
+  };
+});
+---
+
+<MainLayout>
+  <div class="max-w-5xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
+    <header class="mb-12 border-b border-terminal-dim pb-6">
+      <h1 class="text-3xl font-bold glow-text mb-2">/notes</h1>
+      <p class="text-lg text-zinc-400">Atomic technical references and knowledge base.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {notes.length === 0 && (
+        <p class="text-terminal-dim italic">No notes found.</p>
+      )}
+
+      {notes.map((entry) => (
+        <a href={"/profilio/notes/" + entry.slug} class="p-6 hover:text-white transition-all block border border-terminal-dim">
+          <div class="block font-bold text-white mb-1">{entry.data.title}</div>
+          <div class="block text-[10px] text-terminal-dim uppercase mb-2">{entry.data.category}</div>
+          <div class="block text-sm text-zinc-400">{entry.snippet}...</div>
+        </a>
+      ))}
+    </div>
+  </div>
+</MainLayout>

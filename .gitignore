@@ -1,0 +1,22 @@
+# System files
+.DS_Store
+node_modules/
+dist/
+.env
+
+# Project private files
+AGENTS.md
+IDENTITY.md
+SOUL.md
+USER.md
+.gdb_history
+portfolio.tar.gz
+*.log
+
+# Config files that shouldn't be public
+astro.config.mjs
+package-lock.json
+package.json
+tailwind.config.cjs
+tsconfig.json
+skills/
