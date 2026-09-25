@@ -10,11 +10,11 @@ description: "Understanding the defense-in-depth mechanism that randomizes memor
 **ASLR** is a security technique used by operating systems to prevent exploitation of memory corruption vulnerabilities.
 
 ## The Problem
-Old Systems: Binary Address ->#45;->gt; Fixed Location ->#45;->gt; Easy Exploitation.
+Old Systems: Binary Address <code>-></code>#45;<code>-></code>gt; Fixed Location <code>-></code>#45;<code>-></code>gt; Easy Exploitation.
 
 ## The Solution
-Modern OS: Program Start ->#45;->gt; Randomize Base Address ->#45;->gt; Unpredictable Memory Layout.
+Modern OS: Program Start <code>-></code>#45;<code>-></code>gt; Randomize Base Address <code>-></code>#45;<code>-></code>gt; Unpredictable Memory Layout.
 
 ## Bypassing ASLR
 The common path to bypass ASLR:
-Memory Leak ->#45;->gt; Leak Pointer ->#45;->gt; Calculate Base Address ->#45;->gt; Target Function.
+Memory Leak <code>-></code>#45;<code>-></code>gt; Leak Pointer <code>-></code>#45;<code>-></code>gt; Calculate Base Address <code>-></code>#45;<code>-></code>gt; Target Function.
