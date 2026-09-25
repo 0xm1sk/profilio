@@ -22,7 +22,7 @@ The target file, `transmission.dat`, appeared as a hex dump. To retrieve the sec
 The complete one-liner used: `cat transmission.dat | xxd -r | base64 -d`
 
 ## Technical Win
-Multi-layer encoding is a common way to obfuscate data. The key is to recognize the format (Hex $\rightarrow$ Base64 $\rightarrow$ Text) and use a pipeline of tools to process the data linearly.
+Multi-layer encoding is a common way to obfuscate data. The key is to recognize the format (Hex -> Base64 -> Text) and use a pipeline of tools to process the data linearly.
 
 ## Competency: Data Analysis
 **Recognizing and peeling apart encoded data without relying on external tools.**

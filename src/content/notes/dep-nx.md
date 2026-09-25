@@ -25,7 +25,7 @@ In early system architectures, memory was generally readable, writable, and exec
 Since we can no longer execute our own injected code, we must use code that is already present in the binary or its loaded libraries (like `libc`).
 
 The launderer's approach:
-**Find "Gadgets"** $\rightarrow$ **Chain Gadgets via Stack** $\rightarrow$ **Execute Existing Logic**.
+**Find "Gadgets"** -> **Chain Gadgets via Stack** -> **Execute Existing Logic**.
 
 A **Gadget** is a small snippet of existing executable code ending in a `ret` instruction. By chaining these together, we can perform complex operations (like calling `system("/bin/sh")`) without ever needing to execute a single byte of our own injected shellcode.
 

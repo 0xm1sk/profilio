@@ -26,4 +26,4 @@ Containers are made possible by two core Linux kernel features:
 A **Docker Image** is a read-only template (a snapshot of the filesystem). When you run an image, Docker creates a **Container**—a writable layer on top of that image.
 
 **The Flow:**
-Image $\rightarrow$ Container $\rightarrow$ Running Process.
+Image -> Container -> Running Process.

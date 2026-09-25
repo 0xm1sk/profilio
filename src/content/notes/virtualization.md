@@ -20,7 +20,7 @@ The **Hypervisor** (or Virtual Machine Monitor - VMM) is the software layer that
 Modern virtualization relies on hardware support (**Intel VT-x** or **AMD-V**). The hypervisor allows the guest OS to execute most instructions directly on the CPU, but intercepts "sensitive" operations to maintain isolation.
 
 **The VM Stack:**
-Physical Hardware $\rightarrow$ Host OS $\rightarrow$ Hypervisor $\rightarrow$ Guest OS $\rightarrow$ Applications.
+Physical Hardware -> Host OS -> Hypervisor -> Guest OS -> Applications.
 
 ## Security Implication: Isolation
 VMs provide strong isolation because each has its own **Kernel**. A crash or compromise in one VM does not inherently affect the host or other VMs, making it the gold standard for malware analysis and segregated labs.

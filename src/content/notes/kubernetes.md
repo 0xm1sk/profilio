@@ -20,4 +20,4 @@ Managing 100+ containers manually is impossible. Kubernetes automates:
 Kubernetes uses a **Desired State** model. You tell K8s: *"I want 3 replicas of the Nginx API running."* K8s continuously monitors the cluster; if one node fails, it immediately schedules a new container on a healthy node to maintain that state.
 
 ## Summary: The Infrastructure Hierarchy
-Physical Hardware $\rightarrow$ VM $\rightarrow$ Kubernetes $\rightarrow$ Container $\rightarrow$ Application.
+Physical Hardware -> VM -> Kubernetes -> Container -> Application.
