@@ -1,7 +1,7 @@
 ---
 title: "Networking & Cisco Packet Tracer"
 date: 2026-10-01
-tags: ["networking", "cisco", "packet-tracer", "ieee"]
+tags: ["networking", "cisco", "packet-tracer", "ieee", "vlans"]
 ---
 
 # Networking & Cisco Packet Tracer
@@ -61,3 +61,20 @@ A standard Ethernet frame must adhere to specific size constraints to be valid.
   - **Type/Length:** Defines the network layer protocol (e.g., IPv4).
   - **Payload:** The actual data being transported.
   - **FCS (Frame Check Sequence):** A checksum to ensure the data wasn't corrupted during transit.
+
+---
+
+## Advanced Switching & VLANs
+
+### Switching Modes & Performance
+Switches are used for high-performance, secure, and scalable network connectivity.
+
+- **Full Duplex:** Simultaneous send and receive, eliminating collisions.
+- **Store-and-Forward:** The switch buffers the entire frame and checks the CRC for errors before forwarding. Higher reliability, higher latency.
+- **Cut-Through:** The switch forwards the frame as soon as the destination MAC is read. Lower latency, but may forward corrupt frames.
+
+### Virtual LANs (VLANs)
+VLANs allow a single physical switch to be partitioned into multiple logical networks.
+
+- **Purpose:** Isolation of traffic, reduction of broadcast domains, and increased security.
+- **Lab Implementation:** Configured via Cisco Packet Tracer by assigning specific ports to a VLAN ID.
