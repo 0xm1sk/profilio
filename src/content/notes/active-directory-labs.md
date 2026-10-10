@@ -79,7 +79,7 @@ Kerberos is extremely sensitive to time. If your clock differs from the DC's by 
 NetExec output for queries is often multi-line. Use `awk` to clean it up for sorting:
 
 ```bash
-# Extract and sort newest users by whenCreated
+# Example: Extracting and sorting newest users by whenCreated
 awk '/whenCreated/ {wc=$NF} /sAMAccountName/ {sam=$NF} /employeeID/ {eid=$NF; print wc, sam, eid}' users.txt | sort -r | head -10
 ```
 
@@ -87,8 +87,8 @@ awk '/whenCreated/ {wc=$NF} /sAMAccountName/ {sam=$NF} /employeeID/ {eid=$NF; pr
 
 ---
 
-## 4. General Target Reference
-- **Common Domain Root:** `windcorp.io`
-- **DC FQDN:** `DC01.windcorp.io`
-- **Domain SID:** `S-1-5-21-3698659778-4026562730-3385376917`
-- **External Trust:** `partner.local`
+## 4. General Reference
+When analyzing a new domain, always track the following:
+- **Domain FQDN:** The full address of the domain.
+- **Domain SID:** The unique identifier for the domain.
+- **Trusts:** Any external domains that the current forest trusts.
