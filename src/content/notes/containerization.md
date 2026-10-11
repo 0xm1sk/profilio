@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Containerization & Docker"
-<br />
+
 date: 2026-09-25
-<br />
+
 category: "Infrastructure"
-<br />
+
 tags: ["docker", "containers", "linux", "namespaces"]
-<br />
+
 description: "Exploring the difference between VMs and containers via Linux kernel primitives."
-<br />
+
 ---
 <br />
 # Containerization & Docker

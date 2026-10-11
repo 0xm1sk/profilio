@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Understanding RIP"
-<br />
+
 date: 2026-09-19
-<br />
+
 category: "x86-64"
-<br />
+
 tags: ["cpu", "registers", "execution"]
-<br />
+
 description: "A deep dive into the Instruction Pointer register."
-<br />
+
 ---
 <br />
 # The RIP Register

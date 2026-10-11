@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "The OSI Model"
-<br />
+
 date: 2026-09-24
-<br />
+
 category: "Networking"
-<br />
+
 tags: ["osi", "tcp-ip", "protocol", "layers"]
-<br />
+
 description: "Detailed breakdown of the Open Systems Interconnection model and data encapsulation."
-<br />
+
 ---
 <br />
 # The OSI Model

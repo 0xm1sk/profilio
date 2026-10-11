@@ -1,11 +1,11 @@
 ---
-<br />
+
 title: "AD Operator Theory & Methodology"
-<br />
+
 date: 2026-10-10
-<br />
+
 tags: ["ad", "methodology", "redteam", "identity"]
-<br />
+
 ---
 
 # AD Operator Theory & Methodology

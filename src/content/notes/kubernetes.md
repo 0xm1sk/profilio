@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Container Orchestration & Kubernetes"
-<br />
+
 date: 2026-09-25
-<br />
+
 category: "Infrastructure"
-<br />
+
 tags: ["kubernetes", "k8s", "orchestration", "cloud"]
-<br />
+
 description: "Managing large-scale container deployments across multiple servers."
-<br />
+
 ---
 <br />
 # Container Orchestration & Kubernetes

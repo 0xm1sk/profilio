@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Virtualization & Hypervisors"
-<br />
+
 date: 2026-09-25
-<br />
+
 category: "Infrastructure"
-<br />
+
 tags: ["virtualization", "hypervisor", "vm", "hardware"]
-<br />
+
 description: "Understanding the abstraction of physical hardware into virtual machines."
-<br />
+
 ---
 <br />
 # Virtualization & Hypervisors

@@ -1,11 +1,11 @@
 ---
-<br />
+
 title: "Relational Database Foundations"
-<br />
+
 date: 2026-10-09
-<br />
+
 tags: ["databases", "sql", "theory"]
-<br />
+
 ---
 
 # Relational Database Foundations

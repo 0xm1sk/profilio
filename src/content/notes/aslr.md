@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "ASLR: Address Space Layout Randomization"
-<br />
+
 date: 2026-09-19
-<br />
+
 category: "OS Security"
-<br />
+
 tags: ["mitigation", "memory", "security"]
-<br />
+
 description: "Understanding the defense-in-depth mechanism that randomizes memory addresses."
-<br />
+
 ---
 <br />
 # ASLR (Address Space Layout Randomization)

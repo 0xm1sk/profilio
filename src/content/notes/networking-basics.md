@@ -1,11 +1,11 @@
 ---
-<br />
+
 title: "Networking & Cisco Packet Tracer"
-<br />
+
 date: 2026-10-01
-<br />
+
 tags: ["networking", "cisco", "packet-tracer", "ieee", "vlans"]
-<br />
+
 ---
 
 # Networking & Cisco Packet Tracer
@@ -19,21 +19,21 @@ Basic device setup and security configurations using the Cisco CLI.
 - **Hostname:** Sets the identity of the device.
 <br />
   ```bash
-<br />
+
   hostname <name>
-<br />
+
   ```
 <br />
 - **Password Setting:** Securing access to the privileged EXEC mode.
 <br />
   ```bash
-<br />
+
   enable password <password>
-<br />
+
   # or
-<br />
+
   enable secret <password>
-<br />
+
   ```
 
 ### Port Security
@@ -43,17 +43,17 @@ Preventing unauthorized devices from connecting to the network by limiting the n
 - **Maximum MACs:** Limit the number of devices allowed on a single port.
 <br />
   ```bash
-<br />
+
   switchport port-security maximum 2
-<br />
+
   ```
 <br />
 - **Sticky MACs:** Automatically learn the MAC address of the connected device and save it to the running configuration.
 <br />
   ```bash
-<br />
+
   switchport port-security mac-address sticky
-<br />
+
   ```
 
 ---

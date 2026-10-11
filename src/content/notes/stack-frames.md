@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Anatomy of a Stack Frame"
-<br />
+
 date: 2026-09-19
-<br />
+
 category: "x86-64"
-<br />
+
 tags: ["memory", "stack", "functions"]
-<br />
+
 description: "Understanding how functions manage their local state on the stack."
-<br />
+
 ---
 <br />
 # Stack Frames

@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Network Architecture & Topologies"
-<br />
+
 date: 2026-09-24
-<br />
+
 category: "Networking"
-<br />
+
 tags: ["infrastructure", "lan", "wan", "topology"]
-<br />
+
 description: "Foundational concepts of network scale, characteristics, and structural design."
-<br />
+
 ---
 <br />
 # Network Architecture & Topologies

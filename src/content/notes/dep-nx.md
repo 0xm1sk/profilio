@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "DEP and NX: Memory Execution Prevention"
-<br />
+
 date: 2026-09-21
-<br />
+
 category: "OS Security"
-<br />
+
 tags: ["memory", "mitigation", "security", "exploit-dev"]
-<br />
+
 description: "An overview of Data Execution Prevention and the No-Execute bit."
-<br />
+
 ---
 <br />
 # DEP and NX

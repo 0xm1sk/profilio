@@ -1,11 +1,11 @@
 ---
-<br />
+
 title: "Active Directory Foundations"
-<br />
+
 date: 2026-10-07
-<br />
+
 tags: ["ad", "redteam", "netexec", "kerberos", "ldap"]
-<br />
+
 ---
 
 # Active Directory Foundations
@@ -109,11 +109,11 @@ Kerberos requires strict time synchronization. If the attacker's clock differs f
 NetExec query output is often multi-line. To clean this for sorting (e.g., finding the newest user), use `awk`:
 
 ```bash
-<br />
+
 # Extract and sort newest users by whenCreated
-<br />
+
 awk '/whenCreated/ {wc=$NF} /sAMAccountName/ {sam=$NF} /employeeID/ {eid=$NF; print wc, sam, eid}' users.txt | sort -r | head -10
-<br />
+
 ```
 
 <br />

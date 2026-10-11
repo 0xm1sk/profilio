@@ -1,15 +1,15 @@
 ---
-<br />
+
 title: "Understanding RSP"
-<br />
+
 date: 2026-09-19
-<br />
+
 category: "x86-64"
-<br />
+
 tags: ["cpu", "registers", "stack"]
-<br />
+
 description: "A deep dive into the Stack Pointer register."
-<br />
+
 ---
 <br />
 # The RSP Register
