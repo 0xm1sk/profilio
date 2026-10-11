@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Sat Oct 10 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">AD Operator Theory &amp; Methodology</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">ad</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">methodology</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">redteam</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">identity</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="ad-operator-theory--methodology">AD Operator Theory &#x26; Methodology</h1>
+<h2 id="1-the-operator-mindset">1. The Operator Mindset</h2>
+<p>Success in Active Directory environments is not about memorizing commands, but about disciplined methodology.</p>
+<h3 id="core-habits">Core Habits</h3>
+<ul>
+<li><strong>Enumerate Before Acting:</strong> Map the domain fully. Most attack paths are visible in the data available to a plain user.</li>
+<li><strong>The Note-Taking Mandate:</strong> Turn a pile of facts into a path. Document every host, account, group, and SPN.</li>
+<li><strong>Work the Graph:</strong> AD is a web of relationships. Stop running tools at random; ask “Who can reach what from here?”</li>
+<li><strong>Assume Monitoring:</strong> Prefer the “quiet” question. Minimal noise = maximum longevity.</li>
+</ul>
+<h3 id="the-tool-map">The Tool Map</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Goal</th><th align="left">Primary Tools</th><th align="left">Protocol / Mechanism</th></tr></thead><tbody><tr><td align="left"><strong>Graph Domain</strong></td><td align="left">BloodHound, SharpHound</td><td align="left">LDAP $->$ Graph Edges</td></tr><tr><td align="left"><strong>Query Directory</strong></td><td align="left">PowerView, ldapsearch</td><td align="left">LDAP</td></tr><tr><td align="left"><strong>Host/Service Discovery</strong></td><td align="left">nmap, NetExec</td><td align="left">Network, SMB, DNS</td></tr><tr><td align="left"><strong>Protocol Driving</strong></td><td align="left">Impacket Suite</td><td align="left">SMB, RPC, Kerberos</td></tr><tr><td align="left"><strong>Ticket/Hash Mgmt</strong></td><td align="left">Rubeus, Hashcat</td><td align="left">Kerberos $->$ Offline Crack</td></tr><tr><td align="left"><strong>Spray/Roast</strong></td><td align="left">Kerbrute, NetExec</td><td align="left">Kerberos, LDAP</td></tr></tbody></table>
+<hr>
+<h2 id="2-domain-trusts--architecture">2. Domain Trusts &#x26; Architecture</h2>
+<h3 id="what-is-a-trust">What is a Trust?</h3>
+<p>A trust is a bridge that allows one domain/forest to accept authentication from another.</p>
+<ul>
+<li><strong>Direction:</strong>
+<ul>
+<li><strong>One-Way:</strong> Domain B trusts A $->$ A’s users can access B.</li>
+<li><strong>Two-Way:</strong> Both directions allowed.</li>
+</ul>
+</li>
+<li><strong>Transitivity:</strong>
+<ul>
+<li><strong>Transitive:</strong> A $->$ B $->$ C allows A to reach C.</li>
+<li><strong>Non-Transitive:</strong> Stops at the immediate bridge.</li>
+</ul>
+</li>
+</ul>
+<h3 id="forest-boundaries">Forest Boundaries</h3>
+<ul>
+<li><strong>Intra-forest (Parent/Child):</strong> Automatically two-way and transitive. The <strong>Forest</strong> is the true security boundary.</li>
+<li><strong>Inter-forest:</strong> Deliberate agreements between separate forests. More configurable and typically more restricted.</li>
+</ul>
+<hr>
+<h2 id="3-identity--secrets">3. Identity &#x26; Secrets</h2>
+<h3 id="security-principals">Security Principals</h3>
+<p>Every entity in AD (User, Computer, Group) is a <strong>Security Principal</strong> identified by a <strong>SID (Security Identifier)</strong>.</p>
+<ul>
+<li><strong>RID (Relative ID):</strong> The final part of the SID.
+<ul>
+<li><strong>RID 500:</strong> Built-in Administrator.</li>
+<li><strong>RID 512:</strong> Domain Admins.</li>
+</ul>
+</li>
+</ul>
+<h3 id="the-credential-map-where-secrets-live">The Credential Map: Where Secrets Live</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Location</th><th align="left">Scope</th><th align="left">Content</th><th align="left">Value to Attacker</th></tr></thead><tbody><tr><td align="left"><strong>SAM</strong></td><td align="left">Local Machine</td><td align="left">Local user hashes</td><td align="left">Initial foothold / local admin</td></tr><tr><td align="left"><strong>LSASS</strong></td><td align="left">Memory (RAM)</td><td align="left">Hashes, Kerberos keys</td><td align="left">High-value session theft</td></tr><tr><td align="left"><strong>ntds.dit</strong></td><td align="left">Domain Controller</td><td align="left">All domain hashes</td><td align="left">Total Domain Compromise (Endgame)</td></tr><tr><td align="left"><strong>DPAPI</strong></td><td align="left">OS/Apps</td><td align="left">Saved passwords, keys</td><td align="left">Decrypting local secrets/configs</td></tr><tr><td align="left"><strong>Cached Creds</strong></td><td align="left">Local Machine</td><td align="left">Recent domain logons</td><td align="left">Offline access to domain accounts</td></tr></tbody></table>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Wed Oct 07 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">NetExec (nxc)</h1> <div class="flex flex-wrap gap-2 mb-8">   </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">   <h1 id="netexec-nxc">NetExec (nxc)</h1>
+<p>NetExec is a post-exploitation tool that serves as a modern successor to CrackMapExec. It is a “Swiss Army Knife” for network enumeration and attack, allowing operators to interact with multiple protocols from a single CLI.</p>
+<h2 id="core-functionality">Core Functionality</h2>
+<p>NetExec wraps various network protocols into a friendly interface. Every command generally follows this shape:
+<code>nxc &#x3C;protocol> &#x3C;target> -u &#x3C;user> -p &#x3C;password> [flags]</code></p>
+<h3 id="supported-protocols">Supported Protocols</h3>
+<ul>
+<li><strong>SMB (445):</strong> Used for initial authentication, banner grabbing, and checking for null sessions.</li>
+<li><strong>LDAP (389/636):</strong> The primary method for querying the Active Directory database (users, groups, computers, trusts).</li>
+<li><strong>Kerberos (88):</strong> Used for requesting tickets (TGT/TGS) and performing Kerberoasting attacks.</li>
+<li><strong>WinRM (5985/5986):</strong> Remote Windows Management for executing code via PowerShell.</li>
+<li><strong>MSSQL (1433):</strong> Interacting with SQL Server databases.</li>
+</ul>
+<h2 id="key-operator-use-cases">Key Operator Use-Cases</h2>
+<h3 id="1-domain-enumeration">1. Domain Enumeration</h3>
+<p>Using LDAP to extract the domain structure without needing a shell on a target.</p>
+<ul>
+<li><strong>Get Domain SID:</strong> <code>--get-sid</code></li>
+<li><strong>List DCs:</strong> <code>--dc-list</code></li>
+<li><strong>Custom Queries:</strong> Use <code>--query "&#x3C;filter>" "&#x3C;attributes>"</code> to find specific objects.
+<ul>
+<li><em>Example (Find Computers):</em> <code>--query "(objectClass=computer)" "dNSHostName"</code></li>
+<li><em>Example (Find Users):</em> <code>--query "(&#x26;(objectClass=user)(objectCategory=person))" "sAMAccountName whenCreated"</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-credential-testing--spraying">2. Credential Testing &#x26; Spraying</h3>
+<p>Testing sets of credentials across a range of hosts to identify valid accounts or privileged users.</p>
+<h3 id="3-kerberoasting">3. Kerberoasting</h3>
+<p>Identifying service accounts with an SPN (Service Principal Name) and requesting encrypted tickets to crack passwords offline.</p>
+<ul>
+<li><strong>Command:</strong> <code>nxc ldap &#x3C;target> -u &#x3C;user> -p &#x3C;pass> --kerberoasting &#x3C;file></code></li>
+</ul>
+<h2 id="integration-with-the-operator-mindset">Integration with the Operator Mindset</h2>
+<p>NetExec is a “Protocol Client.” It allows the operator to interact with the domain while remaining external to the target hosts, reducing the noise and risk of detection compared to running tools locally on a compromised machine.</p>   </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

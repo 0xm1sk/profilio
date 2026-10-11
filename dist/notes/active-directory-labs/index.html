@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Wed Oct 07 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Active Directory Foundations</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">ad</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">redteam</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">netexec</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">kerberos</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">ldap</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="active-directory-foundations">Active Directory Foundations</h1>
+<p>The transition from basic lab environments to enterprise Active Directory operations requires a shift in how we interact with target systems.</p>
+<br>
+<h2 id="1-the-mental-model-protocol-client-vs-local-user">1. The Mental Model: Protocol Client vs. Local User</h2>
+<p>In standard penetration testing, you typically work with a shell on a target. In advanced AD operations, you operate as a <strong>Protocol Client</strong> from an external attacker box (Kali/Arch).</p>
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Aspect</th><th align="left">Local Shell (Old Way)</th><th align="left">Protocol Client (New Way)</th></tr></thead><tbody><tr><td align="left"><strong>Context</strong></td><td align="left">You are “on” the box.</td><td align="left">You are “on the network.”</td></tr><tr><td align="left"><strong>Auth</strong></td><td align="left">Implicit (Session token).</td><td align="left">Explicit (User/Pass per request).</td></tr><tr><td align="left"><strong>Interaction</strong></td><td align="left">Local OS commands (<code>whoami</code>, <code>net user</code>).</td><td align="left">Protocol requests (SMB, LDAP, Kerberos).</td></tr><tr><td align="left"><strong>Tooling</strong></td><td align="left">Native binaries.</td><td align="left">Tooling like <strong>NetExec (nxc)</strong>.</td></tr></tbody></table>
+<br>
+<hr>
+<h2 id="2-core-tooling-netexec-nxc">2. Core Tooling: NetExec (nxc)</h2>
+<p>NetExec is a post-exploitation framework that wraps multiple protocols into a single CLI, acting as a centralized tool for AD enumeration.</p>
+<p><strong>General Syntax:</strong>
+<code>nxc &#x3C;protocol> &#x3C;target> -u &#x3C;user> -p &#x3C;password> [flags]</code></p>
+<br>
+<h3 id="smb-port-445">SMB (Port 445)</h3>
+<p>Used for initial authentication, banner grabbing, and checking for null sessions.</p>
+<ul>
+<li><strong>Command:</strong> <code>nxc smb &#x3C;target> -u 'user' -p 'pass'</code></li>
+<li><strong>Key Findings:</strong> Hostname, Domain, SMB Signing, and Domain Controller (DC) status.</li>
+</ul>
+<br>
+<h3 id="ldap-port-389636">LDAP (Port 389/636)</h3>
+<p>The primary interface for reading the Active Directory database.</p>
+<ul>
+<li><strong>Domain SID:</strong> <code>--get-sid</code></li>
+<li><strong>Custom Queries:</strong> <code>--query "&#x3C;filter>" "&#x3C;attributes>"</code>
+<ul>
+<li><em>Example (Find Computers):</em> <code>--query "(objectClass=computer)" "dNSHostName"</code></li>
+<li><em>Example (Find Users):</em> <code>--query "(&#x26;(objectClass=user)(objectCategory=person))" "sAMAccountName whenCreated"</code></li>
+</ul>
+</li>
+</ul>
+<br>
+<h3 id="kerberos-port-88">Kerberos (Port 88)</h3>
+<p>The authentication mechanism of AD.</p>
+<ul>
+<li><strong>Kerberoasting:</strong> Requesting TGS tickets for service accounts to crack passwords offline.</li>
+<li><strong>Command:</strong> <code>nxc ldap &#x3C;target> -u &#x3C;user> -p &#x3C;pass> --kerberoasting &#x3C;file></code></li>
+</ul>
+<br>
+<hr>
+<h2 id="3-technical-gotchas--troubleshooting">3. Technical Gotchas &#x26; Troubleshooting</h2>
+<h3 id="the-clock-skew-problem">The Clock Skew Problem</h3>
+<p>Kerberos requires strict time synchronization. If the attacker’s clock differs from the DC’s by more than <strong>~5 minutes</strong>, authentication will fail.</p>
+<br>
+<p><strong>Resolution Steps:</strong></p>
+<ol>
+<li><strong>Sync with Chrony:</strong>
+<code>sudo chronyc add server &#x3C;DC_IP> iburst &#x26;&#x26; sudo chronyc makestep</code></li>
+<li><strong>Manual Sync (Nuclear Option):</strong>
+<ul>
+<li>Query DC time: <code>nxc ldap &#x3C;target> -u &#x3C;user> -p &#x3C;pass> --query "(objectClass=domain)" "currentTime"</code></li>
+<li>Set local time: <code>sudo date -u -s "YYYY-MM-DD HH:MM:SS"</code></li>
+</ul>
+</li>
+</ol>
+<br>
+<h3 id="data-parsing-the-paste-problem">Data Parsing (The “Paste” Problem)</h3>
+<p>NetExec query output is often multi-line. To clean this for sorting (e.g., finding the newest user), use <code>awk</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Extract and sort newest users by whenCreated</span></span>
+<span class="line"><span style="color:#B392F0">awk</span><span style="color:#9ECBFF"> '/whenCreated/ {wc=$NF} /sAMAccountName/ {sam=$NF} /employeeID/ {eid=$NF; print wc, sam, eid}'</span><span style="color:#9ECBFF"> users.txt</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> sort</span><span style="color:#79B8FF"> -r</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> head</span><span style="color:#79B8FF"> -10</span></span>
+<span class="line"></span></code></pre>
+<br>
+<hr>
+<h2 id="4-general-reference">4. General Reference</h2>
+<p>When analyzing a new domain, always track these key identifiers:</p>
+<ul>
+<li><strong>Domain FQDN:</strong> The full address of the domain.</li>
+<li><strong>Domain SID:</strong> The unique identifier for the domain.</li>
+<li><strong>Trusts:</strong> Any external domains that the current forest trusts.</li>
+</ul>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

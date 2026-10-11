@@ -3,58 +3,73 @@
 @tailwind utilities;
 
 :root {
-  --terminal-black: #0d0d0d;
+  --terminal-black: #080808;
   --terminal-dim: #262626;
-  --terminal-gray: #151515;
-  --terminal-phosphor: #cc3333; 
+  --terminal-gray: #111411;
+  --terminal-phosphor: #00FF66; 
+  --terminal-text: #D1D5DB;
+  --color-info: #67BFFF;
+  --color-warning: #FFCC66;
 }
 
 body {
   background-color: var(--terminal-black);
-  color: #ffffff !important;
+  color: var(--terminal-text);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   line-height: 1.6;
 }
 
-/* NUCLEAR OVERRIDE for all text content */
+/* Refined Border System */
 * {
-  border-color: var(--terminal-dim) !important;
+  border-color: var(--terminal-dim);
 }
 
-.prose, .prose * {
-  color: #ffffff !important;
-  background-color: transparent !important;
+/* Content Spacing - Manual fix for missing Typography plugin */
+article p, article li, .prose p, .prose li {
+  margin-bottom: 1.25rem;
 }
 
-/* Keep titles and accents as they are */
+article h1, article h2, article h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
 .text-terminal-phosphor, .glow-text {
   color: var(--terminal-phosphor) !important;
 }
 
 .text-terminal-dim {
-  color: #777 !important;
+  color: #9CA3AF !important;
 }
 
 .terminal-bg {
   background-color: var(--terminal-gray) !important;
 }
 
-.terminal-border {
+/* Code blocks: Distinct and readable */
+pre, code {
+  background-color: #111411 !important;
   border: 1px solid var(--terminal-dim) !important;
+  border-radius: 4px;
+  color: #efefef !important;
 }
 
-.bg-terminal-phosphor {
-  background-color: var(--terminal-phosphor) !important;
+/* Semantic Callouts */
+.info-callout {
+  color: var(--color-info) !important;
+  border-left: 3px solid var(--color-info) !important;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
 }
 
-.bg-terminal-black {
-  background-color: var(--terminal-black) !important;
-}
-
-.bg-terminal-gray {
-  background-color: var(--terminal-gray) !important;
+.warning-callout {
+  color: var(--color-warning) !important;
+  border-left: 3px solid var(--color-warning) !important;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
 }
 
 .glow-text {
-  text-shadow: 0 0 10px rgba(204, 51, 51, 0.4);
+  text-shadow: 0 0 8px rgba(0, 255, 102, 0.3);
 }

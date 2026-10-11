@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Fri Sep 25 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Docker</h1> <div class="flex flex-wrap gap-2 mb-8">   </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">   <h1 id="docker">Docker</h1>
+<p>Docker leverages Linux kernel primitives to provide lightweight isolation. Unlike VMs, it focuses on the application environment rather than the entire operating system.</p>
+<h2 id="core-technical-pillars">Core Technical Pillars</h2>
+<h3 id="1-linux-namespaces">1. Linux Namespaces</h3>
+<p>Namespaces are the primary mechanism for isolation. They ensure a container has its own:</p>
+<ul>
+<li><strong>PID Namespace:</strong> Process isolation (the container has its own PID 1).</li>
+<li><strong>NET Namespace:</strong> Isolated network stack (own IP and ports).</li>
+<li><strong>MNT Namespace:</strong> Isolated filesystem view.</li>
+</ul>
+<h3 id="2-control-groups-cgroups">2. Control Groups (cgroups)</h3>
+<p>cgroups prevent “noisy neighbors” by enforcing strict resource limits.</p>
+<ul>
+<li><strong>Resource Capping:</strong> Limiting a container to specific CPU % or RAM (e.g., 512MB) to prevent a single process from crashing the entire host.</li>
+</ul>
+<h2 id="security-application-vulnerable-services">Security Application: Vulnerable Services</h2>
+<p>For security researchers, Docker is the fastest way to deploy “vulnerable-by-design” services.</p>
+<ul>
+<li><strong>Rapid Deployment:</strong> Spinning up a vulnerable version of an API or Database in milliseconds using a pre-built image.</li>
+<li><strong>Reproducibility:</strong> Ensuring that the environment is identical for every test run, eliminating “works on my machine” issues.</li>
+</ul>
+<h2 id="the-security-boundary">The Security Boundary</h2>
+<p>It is important to remember that containers share the <strong>Host Kernel</strong>. This means a kernel-level vulnerability (Privilege Escalation) can potentially allow an attacker to “break out” of the container and gain control of the host system.</p>   </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

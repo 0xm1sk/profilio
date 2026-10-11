@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Fri Oct 09 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Relational Database Foundations</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">databases</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">sql</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">theory</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="relational-database-foundations">Relational Database Foundations</h1>
+<h2 id="integrity-constraints">Integrity Constraints</h2>
+<p>Constraints ensure that the data stored in the database remains accurate, consistent, and reliable.</p>
+<ul>
+<li><strong>Entity Integrity:</strong> Ensures that each row in a table is unique.
+<ul>
+<li><strong>Primary Key (Clé Primaire):</strong> A unique identifier for each record. No two rows can have the same primary key, and it cannot be null.</li>
+</ul>
+</li>
+<li><strong>Domain Integrity:</strong> Ensures that the data in a column falls within a valid range or format (e.g., an age column cannot be negative).</li>
+<li><strong>Referential Integrity:</strong> Ensures that relationships between tables remain consistent (e.g., you cannot have an order for a customer that doesn’t exist in the Customers table).</li>
+</ul>
+<h2 id="relationship-types">Relationship Types</h2>
+<p>How data in one table relates to data in another.</p>
+<ul>
+<li><strong>1:1 (One-to-One):</strong> One record in Table A relates to exactly one record in Table B.</li>
+<li><strong>1:N (One-to-Many):</strong> One record in Table A relates to multiple records in Table B (e.g., one Customer has many Orders).</li>
+<li><strong>N:M (Many-to-Many):</strong> Multiple records in Table A relate to multiple records in Table B (usually requires a “junction table” to resolve).</li>
+</ul>
+<h3 id="operators-perspective-sql-injection-sqli">Operator’s Perspective: SQL Injection (SQLi)</h3>
+<p>Understanding these constraints is key to exploitation:</p>
+<ul>
+<li><strong>IDOR:</strong> Bypassing primary key logic to access other users’ data.</li>
+<li><strong>JOIN Attacks:</strong> Using known relationships to leak data from sensitive tables via a vulnerable query.</li>
+</ul>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

@@ -318,9 +318,37 @@ declare module 'astro:content' {
 } & { render(): Render[".md"] };
 };
 "notes": {
+"active-directory-labs.md": {
+	id: "active-directory-labs.md";
+  slug: "active-directory-labs";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"ad-operator-theory.md": {
+	id: "ad-operator-theory.md";
+  slug: "ad-operator-theory";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "aslr.md": {
 	id: "aslr.md";
   slug: "aslr";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"containerization.md": {
+	id: "containerization.md";
+  slug: "containerization";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"database-foundations.md": {
+	id: "database-foundations.md";
+  slug: "database-foundations";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">
@@ -332,9 +360,30 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"java-oop.md": {
+	id: "java-oop.md";
+  slug: "java-oop";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"kubernetes.md": {
+	id: "kubernetes.md";
+  slug: "kubernetes";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "network-architecture.md": {
 	id: "network-architecture.md";
   slug: "network-architecture";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"networking-basics.md": {
+	id: "networking-basics.md";
+  slug: "networking-basics";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">
@@ -363,6 +412,13 @@ declare module 'astro:content' {
 "stack-frames.md": {
 	id: "stack-frames.md";
   slug: "stack-frames";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"virtualization.md": {
+	id: "virtualization.md";
+  slug: "virtualization";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">
@@ -460,6 +516,13 @@ declare module 'astro:content' {
   collection: "tools";
   data: InferEntrySchema<"tools">
 } & { render(): Render[".md"] };
+"docker.md": {
+	id: "docker.md";
+  slug: "docker";
+  body: string;
+  collection: "tools";
+  data: InferEntrySchema<"tools">
+} & { render(): Render[".md"] };
 "gdb.md": {
 	id: "gdb.md";
   slug: "gdb";
@@ -481,9 +544,23 @@ declare module 'astro:content' {
   collection: "tools";
   data: InferEntrySchema<"tools">
 } & { render(): Render[".md"] };
+"netexec.md": {
+	id: "netexec.md";
+  slug: "netexec";
+  body: string;
+  collection: "tools";
+  data: InferEntrySchema<"tools">
+} & { render(): Render[".md"] };
 "nmap.md": {
 	id: "nmap.md";
   slug: "nmap";
+  body: string;
+  collection: "tools";
+  data: InferEntrySchema<"tools">
+} & { render(): Render[".md"] };
+"virtualbox.md": {
+	id: "virtualbox.md";
+  slug: "virtualbox";
   body: string;
   collection: "tools";
   data: InferEntrySchema<"tools">

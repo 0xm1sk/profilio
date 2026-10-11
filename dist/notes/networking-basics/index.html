@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Thu Oct 01 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Networking &amp; Cisco Packet Tracer</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">networking</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cisco</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">packet-tracer</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">ieee</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">vlans</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="networking--cisco-packet-tracer">Networking &#x26; Cisco Packet Tracer</h1>
+<h2 id="switch-configuration">Switch Configuration</h2>
+<p>Basic device setup and security configurations using the Cisco CLI.</p>
+<h3 id="general-configuration">General Configuration</h3>
+<ul>
+<li><strong>Hostname:</strong> Sets the identity of the device.
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">hostname</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">nam</span><span style="color:#E1E4E8">e</span><span style="color:#F97583">></span></span>
+<span class="line"></span></code></pre>
+</li>
+<li><strong>Password Setting:</strong> Securing access to the privileged EXEC mode.
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">enable</span><span style="color:#9ECBFF"> password</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">passwor</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span></span>
+<span class="line"><span style="color:#6A737D"># or</span></span>
+<span class="line"><span style="color:#B392F0">enable</span><span style="color:#9ECBFF"> secret</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">passwor</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span></span>
+<span class="line"></span></code></pre>
+</li>
+</ul>
+<h3 id="port-security">Port Security</h3>
+<p>Preventing unauthorized devices from connecting to the network by limiting the number of MAC addresses allowed on a port.</p>
+<ul>
+<li><strong>Maximum MACs:</strong> Limit the number of devices allowed on a single port.
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">switchport</span><span style="color:#9ECBFF"> port-security</span><span style="color:#9ECBFF"> maximum</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"></span></code></pre>
+</li>
+<li><strong>Sticky MACs:</strong> Automatically learn the MAC address of the connected device and save it to the running configuration.
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">switchport</span><span style="color:#9ECBFF"> port-security</span><span style="color:#9ECBFF"> mac-address</span><span style="color:#9ECBFF"> sticky</span></span>
+<span class="line"></span></code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="ieee-802-standards--ethernet">IEEE 802 Standards &#x26; Ethernet</h2>
+<h3 id="ieee-802-family">IEEE 802 Family</h3>
+<p>The IEEE 802 standards define the Physical (PHY) and Data Link (MAC) layers of the OSI model.</p>
+<ul>
+<li><strong>802.1:</strong> Higher Layer LAN/MAN (Bridging, Management).</li>
+<li><strong>802.3:</strong> Ethernet (Wired LAN).</li>
+<li><strong>802.11:</strong> Wireless LAN (Wi-Fi).</li>
+<li><strong>802.15:</strong> Wireless PAN (Bluetooth, Zigbee).</li>
+<li><strong>802.22:</strong> Wireless Regional Area Networks (WRAN).</li>
+</ul>
+<h3 id="medium-access-control-mac">Medium Access Control (MAC)</h3>
+<ul>
+<li><strong>Token-Based Systems:</strong> (e.g., Token Ring) Devices must hold a “token” to transmit. This prevents collisions but creates high latency in large networks because devices must wait their turn.</li>
+<li><strong>Modern Ethernet:</strong> Uses switching to create dedicated collision domains, removing the need for token-waiting.</li>
+</ul>
+<h3 id="the-ethernet-frame">The Ethernet Frame</h3>
+<p>A standard Ethernet frame must adhere to specific size constraints to be valid.</p>
+<ul>
+<li><strong>Minimum Size:</strong> 64 octets (bytes). Frames smaller than this are “Runts” and are usually discarded.</li>
+<li><strong>Maximum Size (MTU):</strong> 1500 octets. Data larger than this must be fragmented.</li>
+<li><strong>Frame Structure:</strong>
+<ul>
+<li><strong>Destination MAC:</strong> Where the frame is going.</li>
+<li><strong>Source MAC:</strong> Where the frame came from.</li>
+<li><strong>Type/Length:</strong> Defines the network layer protocol (e.g., IPv4).</li>
+<li><strong>Payload:</strong> The actual data being transported.</li>
+<li><strong>FCS (Frame Check Sequence):</strong> A checksum to ensure the data wasn’t corrupted during transit.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="advanced-switching--vlans">Advanced Switching &#x26; VLANs</h2>
+<h3 id="switching-modes--performance">Switching Modes &#x26; Performance</h3>
+<p>Switches are used for high-performance, secure, and scalable network connectivity.</p>
+<ul>
+<li><strong>Full Duplex:</strong> Simultaneous send and receive, eliminating collisions.</li>
+<li><strong>Store-and-Forward:</strong> The switch buffers the entire frame and checks the CRC for errors before forwarding. Higher reliability, higher latency.</li>
+<li><strong>Cut-Through:</strong> The switch forwards the frame as soon as the destination MAC is read. Lower latency, but may forward corrupt frames.</li>
+</ul>
+<h3 id="virtual-lans-vlans">Virtual LANs (VLANs)</h3>
+<p>VLANs allow a single physical switch to be partitioned into multiple logical networks.</p>
+<ul>
+<li><strong>Purpose:</strong> Isolation of traffic, reduction of broadcast domains, and increased security.</li>
+<li><strong>Lab Implementation:</strong> Configured via Cisco Packet Tracer by assigning specific ports to a VLAN ID.</li>
+</ul>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>
