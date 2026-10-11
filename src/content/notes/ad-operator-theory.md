@@ -30,7 +30,7 @@ Success in Active Directory environments is not about memorizing commands, but a
 <br />
 | :--- | :--- | :--- |
 <br />
-| **Graph Domain** | BloodHound, SharpHound | LDAP $->$ Graph Edges |
+| **Graph Domain** | BloodHound, SharpHound | LDAP -> Graph Edges |
 <br />
 | **Query Directory** | PowerView, ldapsearch | LDAP |
 <br />
@@ -38,7 +38,7 @@ Success in Active Directory environments is not about memorizing commands, but a
 <br />
 | **Protocol Driving** | Impacket Suite | SMB, RPC, Kerberos |
 <br />
-| **Ticket/Hash Mgmt** | Rubeus, Hashcat | Kerberos $->$ Offline Crack |
+| **Ticket/Hash Mgmt** | Rubeus, Hashcat | Kerberos -> Offline Crack |
 <br />
 | **Spray/Roast** | Kerbrute, NetExec | Kerberos, LDAP |
 
@@ -52,13 +52,13 @@ A trust is a bridge that allows one domain/forest to accept authentication from 
 
 - **Direction:** 
 <br />
-  - **One-Way:** Domain B trusts A $->$ A's users can access B.
+  - **One-Way:** Domain B trusts A -> A's users can access B.
 <br />
   - **Two-Way:** Both directions allowed.
 <br />
 - **Transitivity:**
 <br />
-  - **Transitive:** A $->$ B $->$ C allows A to reach C.
+  - **Transitive:** A -> B -> C allows A to reach C.
 <br />
   - **Non-Transitive:** Stops at the immediate bridge.
 
