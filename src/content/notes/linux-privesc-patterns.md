@@ -10,7 +10,7 @@ Privilege escalation is rarely about a single "magic" exploit; it is the process
 
 <br />
 
-## 🛠️ The Operator's First-Look Checklist
+## The Operator's First-Look Checklist
 
 Before diving into specific exploits, a systematic enumeration of the environment is mandatory.
 
@@ -106,7 +106,7 @@ A binary with `cap_setuid=ep` can call `setuid(0)` internally. If an attacker ca
 
 ---
 
-## 🏁 Summary Table
+## Summary Table
 
 | Vector | Primary Tool/Check | Core Failure |
 |---|---|---|
