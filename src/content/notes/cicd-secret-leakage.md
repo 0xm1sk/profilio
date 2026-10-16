@@ -132,11 +132,11 @@ Modern CI/CD pipelines are complex chains of trust. Secrets often leak not throu
 
 When auditing a CI/CD pipeline, follow this sequence:
 
-1. **Enumerate Environment** $\rightarrow$ Check `/proc`, mounts, and env vars.
-2. **Recover Credentials** $\rightarrow$ Search config files, image layers, and Git history.
-3. **Authenticate** $\rightarrow$ Use recovered keys to access Cloud/K8s/Registry APIs.
-4. **Enumerate Permissions** $\rightarrow$ Map out what the identity can actually do.
-5. **Pivot** $\rightarrow$ Use existing access to find more secrets or move to other systems.
+1. **Enumerate Environment** $->$ Check `/proc`, mounts, and env vars.
+2. **Recover Credentials** $->$ Search config files, image layers, and Git history.
+3. **Authenticate** $->$ Use recovered keys to access Cloud/K8s/Registry APIs.
+4. **Enumerate Permissions** $->$ Map out what the identity can actually do.
+5. **Pivot** $->$ Use existing access to find more secrets or move to other systems.
 
 <br />
 
