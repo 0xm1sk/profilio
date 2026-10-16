@@ -61,8 +61,8 @@ A binary with `cap_setuid=ep` can call `setuid(0)` internally. If an attacker ca
 </div>
 
 **High-Value Targets:**
-- **Interpreters:** `gawk`, `python`, `perl`, `ruby` $->$ use `system()` or `os.system()`.
-- **Editors:** `vim`, `nano` $->$ execute shell commands from within the editor.
+- **Interpreters:** `gawk`, `python`, `perl`, `ruby` -> use `system()` or `os.system()`.
+- **Editors:** `vim`, `nano` -> execute shell commands from within the editor.
 
 <br />
 
@@ -100,7 +100,7 @@ A binary with `cap_setuid=ep` can call `setuid(0)` internally. If an attacker ca
 </div>
 
 **Exploit Shape:**
-`docker run -v /:/mnt/host -it alpine sh` $->$ The entire host filesystem is now accessible and writable at `/mnt/host`.
+`docker run -v /:/mnt/host -it alpine sh` -> The entire host filesystem is now accessible and writable at `/mnt/host`.
 
 <br />
 
