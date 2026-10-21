@@ -47,18 +47,20 @@ To minimize false positives while maintaining high detection rates, apply the th
 
 ---
 
-## 3. Portable Field Mapping
+## 3. The "Rosetta Stone" (Field Mapping)
 
-Sigma uses a common taxonomy to ensure rules work across different log schemas.
+Because every SIEM calls the same thing by a different name, Sigma acts as a translation layer. You write in **Sigma Language**, and the converter handles the vendor specifics.
 
-| Sigma Field | Sysmon (Win) | Security 4688 (Win) | Elastic ECS | Splunk CIM |
-|---|---|---|---|---|
-| `Image` | `Image` | `NewProcessName` | `process.executable` | `process_path` |
-| `CommandLine` | `CommandLine` | `ProcessCommandLine` | `process.command_line` | `process` |
-| `ParentImage` | `ParentImage` | `ParentProcessName` | `process.parent.executable` | `parent_process_path` |
+### Common Translation Map
 
-<div class="warning-callout">
-<strong>Portability Trap:</strong> Avoid using vendor-specific fields (e.g., `OriginalFileName`) or hardcoded Event IDs (e.g., `EventID: 1`), as these break the rule's ability to be converted to other SIEMs.
+| Concept | Sigma Field | Sysmon (Win) | Security 4688 | Elastic ECS | Splunk CIM |
+|---|---|---|---|---|---|
+| **The Process** | `Image` | `Image` | `NewProcessName` | `process.executable` | `process_path` |
+| **The Command** | `CommandLine` | `CommandLine` | `ProcessCommandLine` | `process.command_line` | `process` |
+| **The Parent** | `ParentImage` | `ParentImage` | `ParentProcessName` | `process.parent.executable` | `parent_process_path` |
+
+<div class="info-callout">
+<strong>Pro Tip: Keep it Portable.</strong> To ensure your rules work on any SIEM, always use the **Sigma Field** (left column). Avoid using vendor-specific fields like `OriginalFileName` or hardcoding Event IDs (e.g., `EventID: 1`), as these will break the translation to other platforms.
 </div>
 
 <br />
@@ -74,4 +76,3 @@ Detection is an iterative process of refining the "Sweet Spot" between being too
 3. **Draft**: Write the narrowest rule that captures the primitive.
 4. **Test**: Run against a dataset of known-benign logs.
 5. **Tune**: Add filter blocks to exclude benign near-misses.
-
