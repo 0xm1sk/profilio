@@ -11,6 +11,7 @@ export const collections = {
       tags: z.array(z.string()),
       category: z.string(),
       status: z.string(),
+      description: z.string().optional(),
     }),
   }),
   writeups: defineCollection({
@@ -18,6 +19,8 @@ export const collections = {
       target: z.string(),
       difficulty: z.string(),
       tags: z.array(z.string()),
+      category: z.string().optional(),
+      description: z.string().optional(),
     }),
   }),
   projects: defineCollection({
@@ -25,6 +28,7 @@ export const collections = {
       github: z.string().url(),
       tech_stack: z.array(z.string()),
       description: z.string(),
+      category: z.string().optional(),
     }),
   }),
   tools: defineCollection({
@@ -33,19 +37,14 @@ export const collections = {
       language: z.string(),
       github: z.string().url(),
       description: z.string(),
+      category: z.string().optional(),
     }),
   }),
   notes: defineCollection({
     schema: baseSchema.extend({
       tags: z.array(z.string()),
       category: z.string().optional(),
-    }),
-  }),
-  progress: defineCollection({
-    schema: baseSchema.extend({
-      phase: z.string(),
-      completion: z.number().min(0).max(100),
-      updated: z.date(),
+      description: z.string().optional(),
     }),
   }),
 };

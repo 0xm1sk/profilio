@@ -10,12 +10,15 @@
 
 `profilio` is my personal technical portfolio for documenting what I learn, build, and investigate across offensive security.
 
-The site is organized around four main areas:
+Content lives in five collections, with a few standalone pages alongside them:
 
 * **Research** — security investigations, experiments, and technical analysis
 * **Writeups** — CTFs, labs, and exploitation walkthroughs
 * **Projects** — tools and security-related projects
-* **Notes** — technical references and learning notes
+* **Notes** — technical references and learning notes (filterable by tag)
+* **Tools** — tools used for analysis, reconnaissance, and exploitation
+
+The `/progress` page tracks the offensive and defensive learning roadmap.
 
 The goal is to document the **process and reasoning**, not just the final result.
 
@@ -31,6 +34,8 @@ Current areas of study include:
 * Memory corruption
 * Web & API security
 * Active Directory
+* Detection engineering (Sigma, KQL, SIEM query craft)
+* Incident response & blue-team methodology
 * Security research
 
 ---
@@ -76,11 +81,13 @@ npm run build
 
 ```text
 src/
-├── components/     # Reusable UI components
-├── content/        # Notes, writeups and research content
+├── content/        # Collection schemas + notes, writeups, research, projects, tools
+│   └── templates/  # Frontmatter templates for new entries
 ├── layouts/        # Page layouts
-├── pages/          # Routes
-└── styles/         # Global styles
+├── pages/          # Routes (including dynamic [...slug] pages)
+├── styles/         # Global styles
+└── utils/          # Base-aware URL helpers
+public/             # Static assets (favicon)
 ```
 
 ---
@@ -89,7 +96,7 @@ src/
 
 The site is deployed to **GitHub Pages** through GitHub Actions.
 
-Every update is built from the repository and deployed automatically.
+Every push to `main` is built and deployed automatically by the single workflow in `.github/workflows/astro.yml`. Build output (`dist/`) is generated in CI and is intentionally not committed.
 
 ---
 

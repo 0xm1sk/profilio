@@ -3,7 +3,7 @@ import MainLayout from '@/layouts/MainLayout.astro';
 const { frontmatter } = Astro.props;
 ---
 
-<MainLayout>
+<MainLayout title={frontmatter.title} description={frontmatter.description}>
   <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
     <header class="mb-12 border-b border-terminal-dim pb-6">
       <div class="flex gap-3 mb-4">

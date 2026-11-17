@@ -2,6 +2,7 @@
 title: "Detection Engineering: Query Craft & Generalization"
 date: 2026-11-17
 tags: ["detection-engineering", "siem", "kql", "opensearch", "sigma", "soc"]
+description: "Field dialects, discriminators, KQL quirks, and writing detections that survive rotation."
 ---
 
 # Detection Engineering: Query Craft & Generalization

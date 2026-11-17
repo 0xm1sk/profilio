@@ -1,4 +1,7 @@
 
+# Build output (rebuilt by CI on every push)
+dist/
+
 # OpenClaw / Agent Private Files
 skills/
 AGENTS.md

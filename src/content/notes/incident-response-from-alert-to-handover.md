@@ -2,6 +2,7 @@
 title: "Incident Response: From Alert to Handover"
 date: 2026-11-17
 tags: ["incident-response", "dfir", "soc", "bec", "threat-hunting", "blue-team"]
+description: "Reporting, triage, scoping, silent containment, and handover — one lesson per stage."
 ---
 
 # Incident Response: From Alert to Handover

@@ -11,11 +11,19 @@
  *   url('notes/' + entry.slug)   -> "/profilio/notes/my-note/"
  *   url('')                      -> "/profilio/"
  */
-export function url(path = ''): string {
+function baseUrl(): string {
   const raw = import.meta.env.BASE_URL || '/';
   // BASE_URL ends with "/" when trailingSlash is 'always', but not when it is
   // 'ignore'/'never' — normalize so concatenation is always correct.
-  const base = raw.endsWith('/') ? raw : `${raw}/`;
+  return raw.endsWith('/') ? raw : `${raw}/`;
+}
+
+export function url(path = ''): string {
   const clean = path.replace(/^\/+|\/+$/g, '');
-  return clean ? `${base}${clean}/` : base;
+  return clean ? `${baseUrl()}${clean}/` : baseUrl();
+}
+
+/** Base-aware path for static files in `public/` (no trailing slash added). */
+export function assetPath(path: string): string {
+  return `${baseUrl()}${path.replace(/^\/+/, '')}`;
 }

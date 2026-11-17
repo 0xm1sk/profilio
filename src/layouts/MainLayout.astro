@@ -1,7 +1,13 @@
 ---
-import { url } from '@/utils/url';
+import { url, assetPath } from '@/utils/url';
 
-const { title = "m1sk@offsec" } = Astro.props;
+const siteTitle = 'm1sk@offsec';
+const {
+  title = siteTitle,
+  description = 'Personal technical portfolio and research archive focused on offensive security, detection engineering, and incident response.',
+} = Astro.props;
+
+const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 ---
 
 <!doctype html>
@@ -9,7 +15,13 @@ const { title = "m1sk@offsec" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#080808" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={assetPath('favicon.svg')} />
   </head>
   <body class="bg-terminal-black text-zinc-300 font-mono">
     <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono">

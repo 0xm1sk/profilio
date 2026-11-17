@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="m1sk terminal">
+  <rect width="64" height="64" rx="10" fill="#080808"/>
+  <rect x="3" y="3" width="58" height="58" rx="8" fill="none" stroke="#008f11" stroke-width="2"/>
+  <path d="M14 22 L24 32 L14 42" fill="none" stroke="#00ff66" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="30" y1="42" x2="50" y2="42" stroke="#00ff66" stroke-width="5" stroke-linecap="round"/>
+</svg>

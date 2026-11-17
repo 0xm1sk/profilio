@@ -5,37 +5,117 @@ import { url } from '@/utils/url';
 
 const rawNotes = await getCollection('notes');
 
+function makeSnippet(entry) {
+  const description = entry.data.description?.trim();
+  if (description) return description;
+  return (entry.body || '')
+    .trim()
+    .replace(/^#+[^\n]*\n?/, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[#*`>]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 140);
+}
+
 const notes = rawNotes
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .map(entry => {
-    const body = entry.body || '';
-    return {
-      ...entry,
-      category: entry.data.category || entry.data.tags?.[0] || 'General',
-      snippet: body.slice(0, 100).replace(/[#*`]/g, '')
-    };
-  });
+  .map(entry => ({
+    ...entry,
+    category: entry.data.category || entry.data.tags?.[0] || 'General',
+    snippet: makeSnippet(entry),
+    tagString: (entry.data.tags || []).join(' '),
+  }));
+
+const tagCounts = new Map();
+for (const note of notes) {
+  for (const tag of note.data.tags || []) {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  }
+}
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 ---
 
-<MainLayout>
+<MainLayout title="Notes" description="Atomic technical references and learning notes on offensive security, detection engineering, and incident response.">
   <div class="max-w-5xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
-    <header class="mb-12 border-b border-terminal-dim pb-6">
+    <header class="mb-8 border-b border-terminal-dim pb-6">
       <h1 class="text-3xl font-bold glow-text mb-2">/notes</h1>
       <p class="text-lg text-zinc-400">Atomic technical references and knowledge base.</p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {notes.length === 0 && (
-        <p class="text-terminal-dim italic">No notes found.</p>
-      )}
+    <!-- Tag filters (client-side; query string is not known at static build time) -->
+    <nav class="flex flex-wrap items-center gap-2 mb-6" aria-label="Filter notes by tag">
+      <a href="?" data-tag-filter="" class="text-[10px] uppercase border border-terminal-dim text-terminal-dim px-2 py-1 transition-colors hover:text-white">
+        all [{notes.length}]
+      </a>
+      {tags.map(([tag, count]) => (
+        <a href={`?tag=${encodeURIComponent(tag)}`} data-tag-filter={tag} class="text-[10px] uppercase border border-terminal-dim text-terminal-dim px-2 py-1 transition-colors hover:text-white">
+          {tag} [{count}]
+        </a>
+      ))}
+    </nav>
 
+    <p id="filter-status" class="text-xs text-terminal-dim mb-6 uppercase tracking-widest" aria-live="polite"></p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {notes.map((entry) => (
-        <a href={url('notes/' + entry.slug)} class="p-6 hover:text-white transition-all block border border-terminal-dim">
+        <a href={url('notes/' + entry.slug)} data-note-card data-tags={entry.tagString} class="p-6 hover:text-white transition-all block border border-terminal-dim hover:border-terminal-phosphor">
           <div class="block font-bold text-white mb-1">{entry.data.title}</div>
-          <div class="block text-[10px] text-terminal-dim uppercase mb-2">{entry.data.category}</div>
-          <div class="block text-sm text-zinc-400">{entry.snippet}...</div>
+          <div class="block text-[10px] text-terminal-dim uppercase mb-3">{entry.category}</div>
+          <div class="block text-sm text-zinc-400 mb-4">{entry.snippet}...</div>
+          <div class="flex flex-wrap gap-1">
+            {entry.data.tags?.slice(0, 3).map(tag => (
+              <span class="text-[9px] text-terminal-dim border border-terminal-dim px-1">{tag}</span>
+            ))}
+          </div>
         </a>
       ))}
     </div>
+
+    <p id="empty-state" class="text-terminal-dim italic hidden">No notes found for this tag.</p>
   </div>
+
+  <script is:inline>
+    (function () {
+      var cards = Array.prototype.slice.call(document.querySelectorAll('[data-note-card]'));
+      var chips = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
+      var status = document.getElementById('filter-status');
+      var empty = document.getElementById('empty-state');
+
+      function apply() {
+        var tag = new URLSearchParams(window.location.search).get('tag');
+        var shown = 0;
+        cards.forEach(function (card) {
+          var tags = (card.getAttribute('data-tags') || '').split(' ');
+          var visible = !tag || tags.indexOf(tag) !== -1;
+          card.style.display = visible ? '' : 'none';
+          if (visible) shown++;
+        });
+        chips.forEach(function (chip) {
+          var active = (chip.getAttribute('data-tag-filter') || '') === (tag || '');
+          chip.classList.toggle('border-terminal-phosphor', active);
+          chip.classList.toggle('text-terminal-phosphor', active);
+          chip.classList.toggle('border-terminal-dim', !active);
+          chip.classList.toggle('text-terminal-dim', !active);
+        });
+        if (status) {
+          status.textContent = tag
+            ? 'Filtering by ' + tag + ' — ' + shown + ' note' + (shown === 1 ? '' : 's')
+            : '';
+        }
+        if (empty) empty.classList.toggle('hidden', shown !== 0);
+      }
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function (event) {
+          event.preventDefault();
+          history.pushState({}, '', chip.getAttribute('href'));
+          apply();
+        });
+      });
+
+      window.addEventListener('popstate', apply);
+      apply();
+    })();
+  </script>
 </MainLayout>

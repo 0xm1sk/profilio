@@ -2,6 +2,7 @@
 title: "Hard-Won Defensive Lessons"
 date: 2026-11-17
 tags: ["methodology", "lessons-learned", "soc", "detection-engineering", "incident-response", "mindset"]
+description: "Eight principles that survived repeated failure: behavior over IOC, atomic rows, and more."
 ---
 
 # Hard-Won Defensive Lessons
