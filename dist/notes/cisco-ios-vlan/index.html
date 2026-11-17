@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Sat Oct 17 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Cisco IOS: Switch Configuration &amp; VLAN Management</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">networking</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cisco</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">ios</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">vlan</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">switching</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="cisco-ios-switch-configuration--vlan-management">Cisco IOS: Switch Configuration &#x26; VLAN Management</h1>
+<p>Cisco IOS (Internetwork Operating System) utilizes a hierarchical command structure. Mastering the transition between these modes is fundamental to switch administration.</p>
+<br>
+<h2 id="1-ios-command-hierarchy">1. IOS Command Hierarchy</h2>
+<p>The switch operates in several distinct modes, each with its own set of available commands.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Prompt</th><th>Mode</th><th>Purpose</th></tr></thead><tbody><tr><td><code>Switch></code></td><td><strong>User EXEC</strong></td><td>Basic monitoring and limited status checks.</td></tr><tr><td><code>Switch#</code></td><td><strong>Privileged EXEC</strong></td><td>Detailed verification, administration, and saving configs.</td></tr><tr><td><code>Switch(config)#</code></td><td><strong>Global Configuration</strong></td><td>Modifying settings that affect the entire switch.</td></tr><tr><td><code>Switch(config-if)#</code></td><td><strong>Interface Configuration</strong></td><td>Configuring a specific physical port or SVI.</td></tr><tr><td><code>Switch(config-line)#</code></td><td><strong>Line Configuration</strong></td><td>Configuring console or VTY (remote) access.</td></tr></tbody></table>
+<p><strong>Navigation Flow:</strong>
+<code>User EXEC</code> -> <code>enable</code> -> <code>Privileged EXEC</code> -> <code>configure terminal</code> -> <code>Global Config</code> -> <code>interface &#x3C;id></code> -> <code>Interface Config</code>.</p>
+<br>
+<hr>
+<h2 id="2-base-hardening--identity">2. Base Hardening &#x26; Identity</h2>
+<p>Before deploying a switch, it must be secured to prevent unauthorized access and ensure clear identification.</p>
+<h3 id="identity--global-settings">Identity &#x26; Global Settings</h3>
+<ul>
+<li><strong>Hostname:</strong> <code>hostname S1</code> (Identifies the switch in logs and prompts).</li>
+<li><strong>DNS Suppression:</strong> <code>no ip domain-lookup</code> (Prevents the switch from hanging when a mistyped command is interpreted as a DNS query).</li>
+<li><strong>MOTD Banner:</strong> <code>banner motd #Authorized users only#</code> (Displays legal warnings at login).</li>
+</ul>
+<h3 id="access-control">Access Control</h3>
+<ul>
+<li><strong>Privileged Mode:</strong> <code>enable secret class</code> (Protects the transition to Privileged EXEC).</li>
+<li><strong>Console Access:</strong>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">line</span><span style="color:#9ECBFF"> console</span><span style="color:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#B392F0">password</span><span style="color:#9ECBFF"> cisco</span></span>
+<span class="line"><span style="color:#B392F0">login</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span></span>
+<span class="line"></span></code></pre>
+</li>
+<li><strong>Remote Access (VTY):</strong>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">line</span><span style="color:#9ECBFF"> vty</span><span style="color:#79B8FF"> 0</span><span style="color:#79B8FF"> 4</span></span>
+<span class="line"><span style="color:#B392F0">password</span><span style="color:#9ECBFF"> cisco</span></span>
+<span class="line"><span style="color:#B392F0">login</span></span>
+<span class="line"><span style="color:#B392F0">transport</span><span style="color:#9ECBFF"> input</span><span style="color:#9ECBFF"> telnet</span></span>
+<span class="line"><span style="color:#79B8FF">exit</span></span>
+<span class="line"></span></code></pre>
+</li>
+<li><strong>Password Obfuscation:</strong> <code>service password-encryption</code> (Encrypts plain-text passwords in the configuration file).</li>
+</ul>
+<br>
+<hr>
+<h2 id="3-port-security-the-edge-defense">3. Port Security (The Edge Defense)</h2>
+<p>Port security restricts input to an interface by limiting the MAC addresses allowed to send traffic.</p>
+<div class="info-callout">
+<strong>Sticky MACs:</strong> The `switchport port-security mac-address sticky` command allows the switch to dynamically learn a MAC address and automatically add it to the running configuration, ensuring the device remains authorized after a reboot.
+</div>
+<p><strong>Configuration Workflow:</strong></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">interface</span><span style="color:#9ECBFF"> fastEthernet</span><span style="color:#9ECBFF"> 0/1</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> mode</span><span style="color:#9ECBFF"> access</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> port-security</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> port-security</span><span style="color:#9ECBFF"> maximum</span><span style="color:#79B8FF"> 2</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> port-security</span><span style="color:#9ECBFF"> mac-address</span><span style="color:#9ECBFF"> sticky</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> port-security</span><span style="color:#9ECBFF"> violation</span><span style="color:#9ECBFF"> protect</span></span>
+<span class="line"><span style="color:#B392F0"> no</span><span style="color:#9ECBFF"> shutdown</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Violation Modes:</strong></p>
+<ul>
+<li><strong>Protect:</strong> Drops unauthorized traffic without notifying the admin or shutting the port.</li>
+<li><strong>Restrict:</strong> Drops traffic and logs the violation.</li>
+<li><strong>Shutdown:</strong> Immediately disables the port (err-disable state).</li>
+</ul>
+<br>
+<hr>
+<h2 id="4-vlans--logical-segmentation">4. VLANs &#x26; Logical Segmentation</h2>
+<p>Virtual Local Area Networks (VLANs) allow a physical switch to be partitioned into multiple logical broadcast domains.</p>
+<h3 id="vlan-creation--assignment">VLAN Creation &#x26; Assignment</h3>
+<ol>
+<li><strong>Define the VLAN:</strong>
+<code>vlan 10</code> -> <code>name Enseignant</code></li>
+<li><strong>Assign an Access Port:</strong>
+<code>interface fastEthernet 0/3</code> -> <code>switchport mode access</code> -> <code>switchport access vlan 10</code></li>
+</ol>
+<h3 id="svis-switched-virtual-interfaces">SVIs (Switched Virtual Interfaces)</h3>
+<p>An SVI is a logical interface that represents a VLAN. It is primarily used for switch management (SSH/Telnet).</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">interface</span><span style="color:#9ECBFF"> vlan</span><span style="color:#79B8FF"> 99</span></span>
+<span class="line"><span style="color:#B392F0"> ip</span><span style="color:#9ECBFF"> address</span><span style="color:#79B8FF"> 192.168.20.1</span><span style="color:#79B8FF"> 255.255.255.0</span></span>
+<span class="line"><span style="color:#B392F0"> no</span><span style="color:#9ECBFF"> shutdown</span></span>
+<span class="line"></span></code></pre>
+<h3 id="trunking-8021q">Trunking (802.1Q)</h3>
+<p>Trunks allow a single physical link to carry traffic for multiple VLANs between switches.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">interface</span><span style="color:#9ECBFF"> fastEthernet</span><span style="color:#9ECBFF"> 0/8</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> mode</span><span style="color:#9ECBFF"> trunk</span></span>
+<span class="line"><span style="color:#B392F0"> switchport</span><span style="color:#9ECBFF"> trunk</span><span style="color:#9ECBFF"> allowed</span><span style="color:#9ECBFF"> vlan</span><span style="color:#9ECBFF"> 10,20,30,99</span></span>
+<span class="line"></span></code></pre>
+<br>
+<hr>
+<h2 id="5-vtp-vlan-trunking-protocol">5. VTP (VLAN Trunking Protocol)</h2>
+<p>VTP synchronizes VLAN databases across switches in the same domain, reducing manual configuration overhead.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Mode</th><th>Role</th><th>Behavior</th></tr></thead><tbody><tr><td><strong>Server</strong></td><td>Administrator</td><td>Can create/modify/delete VLANs; propagates changes to clients.</td></tr><tr><td><strong>Client</strong></td><td>Receiver</td><td>Receives VLAN updates; cannot modify the VLAN database.</td></tr><tr><td><strong>Transparent</strong></td><td>Independent</td><td>Forwards VTP updates but maintains its own local VLAN database.</td></tr></tbody></table>
+<p><strong>Basic Setup:</strong>
+<code>vtp domain &#x3C;name></code> -> <code>vtp mode &#x3C;server/client></code> -> <code>vtp password &#x3C;pass></code></p>
+<br>
+<hr>
+<h2 id="-operators-verification-cheat-sheet">📊 Operator’s Verification Cheat Sheet</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Command</th><th>Verification Goal</th></tr></thead><tbody><tr><td><code>show running-config</code></td><td>Current active configuration in RAM.</td></tr><tr><td><code>show startup-config</code></td><td>Configuration saved to NVRAM.</td></tr><tr><td><code>show vlan brief</code></td><td>Port-to-VLAN assignments and VLAN status.</td></tr><tr><td><code>show interfaces trunk</code></td><td>Trunking status and allowed VLAN list.</td></tr><tr><td><code>show ip interface brief</code></td><td>IP addresses and operational state of SVIs.</td></tr><tr><td><code>show port-security</code></td><td>Global port security status.</td></tr><tr><td><code>show vtp status</code></td><td>VTP domain, mode, and revision number.</td></tr><tr><td><code>copy running-config startup-config</code></td><td>Saves the active configuration to persist after reboot.</td></tr></tbody></table>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

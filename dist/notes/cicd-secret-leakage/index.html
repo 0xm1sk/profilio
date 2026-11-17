@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Tue Oct 13 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">CI/CD Secret Leakage</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cicd</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">devops</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">secrets</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">kubernetes</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cloud</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="cicd-secret-leakage">CI/CD Secret Leakage</h1>
+<p>Modern CI/CD pipelines are complex chains of trust. Secrets often leak not through a single failure, but through the persistence of credentials across different stages of the build and deployment process.</p>
+<br>
+<h2 id="1-process-environment-leakage">1. Process Environment Leakage</h2>
+<div class="info-callout">
+<strong>Concept:</strong> Build runners inject secrets as environment variables. These variables persist in the process environment and are accessible via the Linux `/proc` filesystem.
+</div>
+<br>
+<p><strong>Methodology:</strong></p>
+<ol>
+<li>Identify the target process (e.g., a build runner) using <code>ps</code>.</li>
+<li>Dump the environment variables:
+<code>cat /proc/&#x3C;pid>/environ | tr '\0' '\n'</code></li>
+<li>Filter for sensitive keywords:
+<code>grep -E "SECRET|TOKEN|KEY|PASSWORD"</code></li>
+</ol>
+<div class="warning-callout">
+<strong>Lesson:</strong> Environment variables are not temporary; they persist as long as the process is alive.
+</div>
+<br>
+<hr>
+<h2 id="2-container-image-layer-analysis">2. Container Image Layer Analysis</h2>
+<div class="info-callout">
+<strong>Concept:</strong> Docker images are immutable layers. If a secret is added in Layer A and deleted in Layer B, the secret still exists in the history of Layer A.
+</div>
+<br>
+<p><strong>Methodology:</strong></p>
+<ol>
+<li>Use the <strong>Docker Registry HTTP API (v2)</strong> to fetch the image manifest and blobs.</li>
+<li>Extract each layer (typically <code>.tar.gz</code> files).</li>
+<li>Search through the extracted filesystems for secrets:
+<code>grep -R "password" .</code></li>
+<li>Identify “whiteout” files (<code>.wh.</code>) to understand what the developers tried to hide.</li>
+</ol>
+<div class="warning-callout">
+<strong>Lesson:</strong> Once a secret is committed to an image layer, it is permanent. Rotation is the only fix.
+</div>
+<br>
+<hr>
+<h2 id="3-cloud-credential-abuse">3. Cloud Credential Abuse</h2>
+<div class="info-callout">
+<strong>Concept:</strong> Long-lived AWS/Azure/GCP keys are often left in home directories or config files on build agents, allowing an attacker to assume that identity.
+</div>
+<br>
+<p><strong>Methodology:</strong></p>
+<ol>
+<li>Search for common config paths: <code>~/.aws/credentials</code>, <code>~/.azure/</code>, or <code>.env</code> files.</li>
+<li>Use the corresponding CLI to verify the identity:
+<code>aws sts get-caller-identity</code></li>
+<li>Enumerate accessible resources:
+<code>aws s3 ls</code>
+<code>aws secretsmanager list-secrets</code></li>
+</ol>
+<div class="warning-callout">
+<strong>Lesson:</strong> Use short-lived, identity-based tokens (like IAM Roles for EC2/K8s) instead of static access keys.
+</div>
+<br>
+<hr>
+<h2 id="4-kubernetes-service-account-tokens">4. Kubernetes Service Account Tokens</h2>
+<div class="info-callout">
+<strong>Concept:</strong> Every pod is automatically mounted with a Service Account token. If the RBAC permissions for that account are over-privileged, the pod becomes a gateway to the cluster.
+</div>
+<br>
+<p><strong>Methodology:</strong></p>
+<ol>
+<li>Locate the token: <code>/var/run/secrets/kubernetes.io/serviceaccount/token</code></li>
+<li>Use <code>kubectl</code> to test permissions:
+<code>kubectl auth can-i --list</code></li>
+<li>Attempt to list secrets across the cluster:
+<code>kubectl get secrets -A</code></li>
+</ol>
+<div class="warning-callout">
+<strong>Lesson:</strong> Disable `automountServiceAccountToken: false` in the pod spec unless the pod explicitly needs to talk to the K8s API.
+</div>
+<br>
+<hr>
+<h2 id="5-git-history-recovery">5. Git History Recovery</h2>
+<div class="info-callout">
+<strong>Concept:</strong> Git is a content-addressed database. Deleting a file in a new commit does not remove it from the object store.
+</div>
+<br>
+<p><strong>Methodology:</strong></p>
+<ol>
+<li>Find deleted files that might have contained secrets:
+<code>git log --diff-filter=D --summary</code></li>
+<li>Search through all commits for specific patterns:
+<code>git grep "SECRET" $(git rev-list --all)</code></li>
+<li>Inspect dangling blobs (objects not linked to any branch):
+<code>git fsck --lost-found</code>
+<code>git cat-file -p &#x3C;blob-hash></code></li>
+</ol>
+<div class="warning-callout">
+<strong>Lesson:</strong> Use tools like `trufflehog` or `gitleaks` in the pipeline to prevent secrets from being committed in the first place.
+</div>
+<br>
+<hr>
+<h2 id="️-operators-workflow">🛠️ Operator’s Workflow</h2>
+<p>When auditing a CI/CD pipeline, follow this sequence:</p>
+<ol>
+<li><strong>Enumerate Environment</strong> -> Check <code>/proc</code>, mounts, and env vars.</li>
+<li><strong>Recover Credentials</strong> -> Search config files, image layers, and Git history.</li>
+<li><strong>Authenticate</strong> -> Use recovered keys to access Cloud/K8s/Registry APIs.</li>
+<li><strong>Enumerate Permissions</strong> -> Map out what the identity can actually do.</li>
+<li><strong>Pivot</strong> -> Use existing access to find more secrets or move to other systems.</li>
+</ol>
+<br>
+<p><strong>Key Toolkit:</strong>
+<code>ps</code>, <code>cat /proc</code>, <code>curl</code>, <code>aws-cli</code>, <code>kubectl</code>, <code>git</code>, <code>grep</code>, <code>trufflehog</code>.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

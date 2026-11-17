@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Tue Oct 20 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Detection Engineering with Sigma</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">sigma</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">detection-engineering</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">siem</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">soc</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="detection-engineering-with-sigma">Detection Engineering with Sigma</h1>
+<p>Sigma is a vendor-neutral, YAML-based language used to describe detection rules. It allows analysts to write a detection once and convert it into specific queries for Splunk, Elastic, Microsoft Sentinel, or other SIEMs.</p>
+<br>
+<h2 id="1-anatomy-of-a-sigma-rule">1. Anatomy of a Sigma Rule</h2>
+<p>A robust Sigma rule is composed of three primary segments:</p>
+<h3 id="the-metadata">The Metadata</h3>
+<p>Defines the rule’s purpose, author, and mapping to the <strong>MITRE ATT&#x26;CK</strong> framework.</p>
+<h3 id="the-logsource">The Logsource</h3>
+<p>Defines <strong>where</strong> the rule should run.</p>
+<ul>
+<li><strong>Category</strong>: <code>process_creation</code>, <code>network_connection</code>, <code>registry_event</code>, <code>file_event</code>.</li>
+<li><strong>Product</strong>: <code>windows</code>, <code>linux</code>, etc.</li>
+</ul>
+<h3 id="the-detection-logic">The Detection Logic</h3>
+<p>The core of the rule, consisting of selection blocks and a final condition.</p>
+<ul>
+<li><strong>Selection</strong>: A set of fields and values that must match (e.g., <code>Image: 'cmd.exe'</code>).</li>
+<li><strong>Filter</strong>: A set of values to exclude to reduce false positives (e.g., <code>CommandLine: 'allowed_script.ps1'</code>).</li>
+<li><strong>Condition</strong>: A boolean expression combining selections and filters (e.g., <code>selection1 and not filter1</code>).</li>
+</ul>
+<br>
+<hr>
+<h2 id="2-the-three-layer-rule-design">2. The Three-Layer Rule Design</h2>
+<p>To minimize false positives while maintaining high detection rates, apply the three-layer design pattern:</p>
+<ol>
+<li><strong>Identity</strong>: Identify the tool or process (e.g., <code>Image|endswith: '\certutil.exe'</code>).</li>
+<li><strong>Primitive</strong>: Identify the malicious behavior (e.g., <code>CommandLine|contains: '-urlcache'</code>).</li>
+<li><strong>Network Signal</strong>: Identify the external interaction (e.g., <code>CommandLine|contains: 'http://'</code>).</li>
+</ol>
+<p><strong>Logic Flow:</strong>
+<code>Identity</code> -> <code>Primitive</code> -> <code>Network Signal</code> -> <code>High Confidence Alert</code>.</p>
+<br>
+<hr>
+<h2 id="3-the-rosetta-stone-field-mapping">3. The “Rosetta Stone” (Field Mapping)</h2>
+<p>Because every SIEM calls the same thing by a different name, Sigma acts as a translation layer. You write in <strong>Sigma Language</strong>, and the converter handles the vendor specifics.</p>
+<h3 id="common-translation-map">Common Translation Map</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Concept</th><th>Sigma Field</th><th>Sysmon (Win)</th><th>Security 4688</th><th>Elastic ECS</th><th>Splunk CIM</th></tr></thead><tbody><tr><td><strong>The Process</strong></td><td><code>Image</code></td><td><code>Image</code></td><td><code>NewProcessName</code></td><td><code>process.executable</code></td><td><code>process_path</code></td></tr><tr><td><strong>The Command</strong></td><td><code>CommandLine</code></td><td><code>CommandLine</code></td><td><code>ProcessCommandLine</code></td><td><code>process.command_line</code></td><td><code>process</code></td></tr><tr><td><strong>The Parent</strong></td><td><code>ParentImage</code></td><td><code>ParentImage</code></td><td><code>ParentProcessName</code></td><td><code>process.parent.executable</code></td><td><code>parent_process_path</code></td></tr></tbody></table>
+<div class="info-callout">
+<strong>Pro Tip: Keep it Portable.</strong> To ensure your rules work on any SIEM, always use the **Sigma Field** (left column). Avoid using vendor-specific fields like `OriginalFileName` or hardcoding Event IDs (e.g., `EventID: 1`), as these will break the translation to other platforms.
+</div>
+<br>
+<hr>
+<h2 id="4-the-iterative-engineering-loop">4. The Iterative Engineering Loop</h2>
+<p>Detection is an iterative process of refining the “Sweet Spot” between being too narrow (missing variants) and too broad (excessive false positives).</p>
+<ol>
+<li><strong>Pivot</strong>: Compare malicious and benign command lines side-by-side in the SIEM.</li>
+<li><strong>Isolate</strong>: Identify the discriminating primitive (the token that only appears in malicious samples).</li>
+<li><strong>Draft</strong>: Write the narrowest rule that captures the primitive.</li>
+<li><strong>Test</strong>: Run against a dataset of known-benign logs.</li>
+<li><strong>Tune</strong>: Add filter blocks to exclude benign near-misses.</li>
+</ol>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

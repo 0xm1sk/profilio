@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Mon Oct 19 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Advanced Memory Analysis: Hollowing vs. Injection</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">forensics</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">memory</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">volatility</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">malware-analysis</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">dfir</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="advanced-memory-analysis-hollowing-vs-injection">Advanced Memory Analysis: Hollowing vs. Injection</h1>
+<p>Detecting modern implants requires moving beyond signature-based detection. An investigator must analyze the structural discrepancies between how the Windows kernel tracks a process and the physical reality of the memory pages.</p>
+<br>
+<h2 id="1-execution-context-vs-malicious-intent">1. Execution Context vs. Malicious Intent</h2>
+<p>A critical failure in many investigations is the “Loudest String” fallacy—trusting the account that is executing the process over the evidence of the process’s actual intent.</p>
+<div class="warning-callout">
+<strong>The Trap:</strong> Tools like `windows.getsids` may show a process running as a local admin (e.g., `buildadmin`). This is the **execution context**. However, the **malicious intent** is found in the code itself, which may be hardcoded to target a different, higher-privileged domain account.
+</div>
+<p><strong>The Breakthrough:</strong>
+When structured tools fail, raw string analysis of the memory dump can reveal the intended target:
+<code>strings &#x3C;dump>.raw | grep -i "&#x3C;DOMAIN>" | grep -v "\.exe\|\.dll"</code> -> <code>Finds hardcoded targets (e.g., DOMAIN\\svc_backup) and function calls (e.g., HoldLsassHandle).</code></p>
+<br>
+<hr>
+<h2 id="2-the-hollowing-detection-matrix">2. The Hollowing Detection Matrix</h2>
+<p>Process Hollowing involves replacing the executable code of a legitimate process with a malicious payload. Detection focuses on finding the “unmapped” state of the image.</p>
+<h3 id="the-standard-signal-mz-headers">The Standard Signal (MZ Headers)</h3>
+<p>The easiest signal is finding a Portable Executable (PE) header in a memory region that should not contain one.</p>
+<ul>
+<li><strong>Indicator:</strong> <code>PAGE_EXECUTE_READWRITE</code> (RWX) memory regions that are anonymous (no file backing) and start with the magic bytes <code>4D 5A</code> (MZ).</li>
+<li><strong>Tool:</strong> <code>windows.malfind</code></li>
+</ul>
+<h3 id="detecting-headerless-hollowing">Detecting “Headerless” Hollowing</h3>
+<p>Sophisticated loaders strip the MZ header to evade <code>malfind</code>. In these cases, we rely on structural anomalies:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Method</th><th>Tool/Plugin</th><th>Detection Logic</th></tr></thead><tbody><tr><td><strong>PTE/PFN Analysis</strong></td><td><code>ptemalfind</code></td><td>Identifies executable pages in a mapped image that are no longer shareable (modified in-place).</td></tr><tr><td><strong>API Pointer Scan</strong></td><td><code>apisearch</code></td><td>Scans for clusters of 8-byte pointers resolving to valid kernel APIs (the IAT pattern).</td></tr><tr><td><strong>Entry Point Audit</strong></td><td><code>hollowprocesses</code></td><td>Compares the PEB <code>ImageBaseAddress</code> against the actual code at the entry point to find redirects/jumps.</td></tr><tr><td><strong>VAD vs. PEB</strong></td><td><code>vadinfo</code></td><td>Checks if the PEB claims a file path, but the VAD entry at the image base is anonymous.</td></tr></tbody></table>
+<br>
+<hr>
+<h2 id="3-64-bit-memory-nuances">3. 64-Bit Memory Nuances</h2>
+<p>Analysis of 64-bit processes introduces specific structural shifts that change how we identify anomalies.</p>
+<ul>
+<li><strong>Pointer Width:</strong> IAT entries and memory addresses are 8 bytes. A 32-bit IAT pattern will not match a 64-bit process.</li>
+<li><strong>PEB Offsets:</strong> The <code>ImageBaseAddress</code> is located at offset <code>0x10</code> in 64-bit, compared to <code>0x08</code> in 32-bit.</li>
+<li><strong>Address Ranges:</strong> Valid 64-bit user-mode addresses typically reside in the <code>0x7FF...</code> range. An executable region at a low address (e.g., <code>0x140000000</code>) in a 64-bit process is a strong indicator of an injected payload.</li>
+</ul>
+<br>
+<hr>
+<h2 id="4-hollowing-vs-thread-hijacking">4. Hollowing vs. Thread Hijacking</h2>
+<p>While both involve injecting code, they leave very different footprints in memory.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Feature</th><th>Thread Hijacking (T1055.003)</th><th>Process Hollowing (T1055.012)</th></tr></thead><tbody><tr><td><strong>Target</strong></td><td>Existing running process</td><td>Newly created suspended process</td></tr><tr><td><strong>Image VAD</strong></td><td>Remains file-backed (original PE stays)</td><td>Becomes anonymous (original unmapped)</td></tr><tr><td><strong>Footprint</strong></td><td>Small shellcode region (often one page)</td><td>Large replacement (entire image section)</td></tr><tr><td><strong>Detection</strong></td><td>Thread RIP points to anonymous memory</td><td>PEB path vs. VAD mismatch</td></tr></tbody></table>
+<p><strong>Diagnostic Flow:</strong>
+<code>Identify Process</code> -> <code>Check VAD at Image Base</code> -> <code>If Anonymous -> Hollowing</code> -> <code>If File-Backed but RIP is anomalous -> Thread Hijacking</code>.</p>
+<br>
+<hr>
+<h2 id="-summary-of-forensic-evidence">🏁 Summary of Forensic Evidence</h2>
+<p><strong>The “Smoking Gun” for Hollowing:</strong>
+<code>PEB Path = C:\Windows\System32\calc.exe</code> -> <code>VAD at Image Base = Anonymous/RWX</code> -> <code>Code = MZ Header / API Pointers</code>.</p>
+<p><strong>The “Smoking Gun” for Hijacking:</strong>
+<code>PEB Path = C:\Windows\System32\calc.exe</code> -> <code>VAD at Image Base = File-backed</code> -> <code>Thread RIP = 0x0000... (Anonymous Region)</code>.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

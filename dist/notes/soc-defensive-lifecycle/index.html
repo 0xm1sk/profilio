@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Sat Oct 17 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">SOC Operations: The Defensive Lifecycle</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">soc</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">dfir</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">incident-response</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">blue-team</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="soc-operations-the-defensive-lifecycle">SOC Operations: The Defensive Lifecycle</h1>
+<p>A Security Operations Center (SOC) is not simply about responding to alerts; it is the practice of finding “unexplained” events and reconstructing the narrative of an intrusion through technical artifacts.</p>
+<br>
+<h2 id="the-analytical-mindset">The Analytical Mindset</h2>
+<p>The core of defensive operations is the ability to disprove a hypothesis. An alert (e.g., “Off-hours Login”) is not a finding until it is contextualized.</p>
+<div class="info-callout">
+<strong>Contextualization:</strong> An anomaly is only malicious if it cannot be mapped to a sanctioned change ticket, a scheduled maintenance window, or a standard system process.
+</div>
+<p><strong>The Investigation Flow:</strong>
+<code>Indicator (IP/Domain)</code> -> <code>Pivot across Network</code> -> <code>Chronological Sorting</code> -> <code>Timeline Reconstruction</code> -> <code>Patient Zero Identification</code>.</p>
+<br>
+<hr>
+<h2 id="investigation-pillars">Investigation Pillars</h2>
+<h3 id="1-endpoint-telemetry--windows-internals">1. Endpoint Telemetry &#x26; Windows Internals</h3>
+<p>Focuses on how code executes on the host and how attackers abuse legitimate system functions.</p>
+<ul>
+<li><strong>Process Ancestry:</strong> Analyzing parent-child relationships. A word processor (<code>winword.exe</code>) spawning a command shell (<code>cmd.exe</code>) is a critical anomaly.</li>
+<li><strong>Living off the Land (LotL):</strong> Detecting the abuse of LOLBins (e.g., <code>certutil.exe</code> for downloading payloads, <code>schtasks.exe</code> for persistence).</li>
+<li><strong>Evasion:</strong> Identifying tampering with AMSI (Antimalware Scan Interface) or ETW (Event Tracing for Windows) to blind security tooling.</li>
+</ul>
+<br>
+<h3 id="2-network-forensics">2. Network Forensics</h3>
+<p>Moving beyond packet capture to behavioral analysis of the communication channel.</p>
+<ul>
+<li><strong>C2 Detection:</strong> Identifying Command &#x26; Control channels via <strong>Beaconing</strong> (consistent connection intervals) and <strong>TLS Fingerprinting</strong> (JA3 hashes) to identify the client software regardless of encryption.</li>
+<li><strong>Covert Channels:</strong> Spotting DNS Tunneling by analyzing high-entropy subdomains and excessive TXT record queries.</li>
+<li><strong>Traffic Analysis:</strong> Following TCP streams to extract exfiltrated data and analyzing raw email headers for SPF/DKIM/DMARC failures.</li>
+</ul>
+<br>
+<h3 id="3-memory-forensics">3. Memory Forensics</h3>
+<p>Analyzing the “Ground Truth” of a system by inspecting RAM, where modern malware often resides without touching the disk.</p>
+<ul>
+<li><strong>Hidden Processes:</strong> Comparing <code>pslist</code> (the OS view) against <code>psscan</code> (a raw pool scan of memory) to find unlinked processes.</li>
+<li><strong>Injection Detection:</strong> Using <code>malfind</code> to locate RWX regions and validating them against MZ headers to distinguish from JIT compilation.</li>
+<li><strong>Module Hiding:</strong> Using <code>ldrmodules</code> to find discrepancies between InLoad and InMem lists.</li>
+</ul>
+<br>
+<hr>
+<h2 id="investigators-mapping-table">Investigator’s Mapping Table</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Detection Goal</th><th>Primary Artifact</th><th>Technical Indicator</th></tr></thead><tbody><tr><td><strong>Hidden Process</strong></td><td>Memory Dump</td><td><code>pslist</code> vs <code>psscan</code> mismatch</td></tr><tr><td><strong>Process Hollowing</strong></td><td>Memory Dump</td><td>RWX region + MZ Header + <code>ldrmodules</code> mismatch</td></tr><tr><td><strong>C2 Communication</strong></td><td>PCAP / Netflow</td><td>Beaconing cadence + JA3 TLS Hash</td></tr><tr><td><strong>Data Exfiltration</strong></td><td>PCAP</td><td>High-volume HTTP POST / DNS TXT queries</td></tr><tr><td><strong>Privilege Escalation</strong></td><td>OS Logs / Proc</td><td>SUID binaries / <code>sudo -l</code> / <code>/proc/&#x3C;pid>/environ</code></td></tr><tr><td><strong>Persistence</strong></td><td>Registry / Disk</td><td>WMI Event Subscriptions / Scheduled Tasks</td></tr></tbody></table>
+<br>
+<h2 id="the-synthesis">The Synthesis</h2>
+<p>A successful investigation transitions from raw data to a structured product:
+<code>Raw Logs</code> -> <code>Timeline Construction</code> -> <code>MITRE ATT&#x26;CK Mapping</code> -> <code>Root Cause Analysis</code> -> <code>Containment &#x26; Remediation</code>.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

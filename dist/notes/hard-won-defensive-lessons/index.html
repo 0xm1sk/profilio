@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Tue Nov 17 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Hard-Won Defensive Lessons</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">methodology</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">lessons-learned</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">soc</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">detection-engineering</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">incident-response</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">mindset</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="hard-won-defensive-lessons">Hard-Won Defensive Lessons</h1>
+<p>These are the principles that survived the most failures — the ones I now apply before I touch a rule, a report, or an alert queue.</p>
+<br>
+<h2 id="1-read-the-error-text-precisely">1. Read the error text precisely</h2>
+<p>Every error message was a diagnosis, not a verdict. “Row 3 matched no stage” meant bundled fields. “Scope does not cover every asset” meant a missing IP. “Rule 4 fires on a lookalike” meant I matched shape instead of malice. The fix was almost always in the wording of the error.</p>
+<br>
+<h2 id="2-one-item-per-row">2. One item per row</h2>
+<p>Every grader that failed for bundling said the same thing: rows register as single events. A row that says “do A and B and C” counts as one step and loses the other two. Keep findings, report fields, and response actions atomic.</p>
+<br>
+<h2 id="3-behavior-over-indicator">3. Behavior over indicator</h2>
+<p>Every rule keyed on a fixed IOC — a collector address, a C2 IP, a service name, a script filename — failed held-out tests. The rules that held keyed on the relationship that made the activity malicious: cross-mailbox forwarding, root escalation from a temp path, RC4 on any SPN, Office spawning PowerShell, SYSTEM tasks outside System32. Indicators rot; techniques persist.</p>
+<br>
+<h2 id="4-decoys-are-everywhere">4. Decoys are everywhere</h2>
+<p>Every scenario had a benign record shaped exactly like the evil one — a legitimate backup script, an admin consent, a newsletter rule, a large cloud sync. The technique that worked every time was to place the two events side by side and key on what only the malicious one had, or uniquely lacked.</p>
+<br>
+<h2 id="5-verify-field-names-and-types-before-writing-rules">5. Verify field names and types before writing rules</h2>
+<p>Snake_case versus PascalCase, <code>has</code> versus <code>contains</code>, number versus string, comma-formatted byte counts, doubled backslashes — roughly half of failed submissions were correct logic in the wrong dialect. Confirm the schema and the query language first.</p>
+<br>
+<h2 id="6-ask-for-clarification-early">6. Ask for clarification early</h2>
+<p>After more than a dozen failed variations of a single rule, one well-formed question to the person who designed the exercise resolved what weeks of guessing could not: a coverage requirement, a held-out dataset, an escaping quirk. Asking is a resource, not a defeat. State what you have tried and ask a specific question.</p>
+<br>
+<h2 id="7-never-fabricate-artifacts">7. Never fabricate artifacts</h2>
+<p>Invented scheduled tasks, phantom files on disk, made-up mechanisms — all counted as noise and drove precision failures. Submit only what a log line proves.</p>
+<br>
+<h2 id="8-silent-containment-first">8. Silent containment first</h2>
+<p>Quiet actions — isolate, block egress, revoke tokens — come before loud ones like disabling an account or resetting a password, because the loud ones tip off the attacker before their access is cut.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

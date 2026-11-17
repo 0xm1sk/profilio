@@ -38,6 +38,7 @@ export const collections = {
   notes: defineCollection({
     schema: baseSchema.extend({
       tags: z.array(z.string()),
+      category: z.string().optional(),
     }),
   }),
   progress: defineCollection({

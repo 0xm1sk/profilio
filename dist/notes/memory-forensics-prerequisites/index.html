@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Mon Oct 19 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">Prerequisites for Memory Forensics &amp; Windows Internals</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">forensics</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">windows-internals</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">memory</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">theory</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">volatility</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="prerequisites-for-memory-forensics--windows-internals">Prerequisites for Memory Forensics &#x26; Windows Internals</h1>
+<p>Memory forensics is the art of reconstructing the state of a system from a raw dump of physical RAM. To move beyond simply running plugins, an analyst must understand the underlying kernel structures and the “map” the OS uses to manage memory.</p>
+<br>
+<h2 id="1-the-windows-process-hierarchy">1. The Windows Process Hierarchy</h2>
+<p>Every process in Windows is represented by a set of linked kernel objects. Understanding these relationships is the foundation of all memory analysis.</p>
+<div class="info-callout">
+<strong>The Core Relationship:</strong>
+`KDBG` (Kernel Debugger Block) -> `ActiveProcessLinks` -> `_EPROCESS` -> `{ PEB, VadRoot, ThreadList, ObjectTable, Token }`
+</div>
+<h3 id="key-kernel-structures">Key Kernel Structures</h3>
+<ul>
+<li><strong><code>_EPROCESS</code></strong>: The primary kernel-level object for a process. It contains the PID, image name, and pointers to the process’s memory and security context.</li>
+<li><strong><code>PEB</code> (Process Environment Block)</strong>: A user-mode mirror of process info. It stores the <code>ImageBaseAddress</code>, the list of loaded modules (<code>Ldr</code>), and command-line arguments.</li>
+<li><strong>VAD Tree (Virtual Address Descriptor)</strong>: A kernel-level AVL tree that describes every single virtual memory region allocated to a process. This is where we find if a region is private, shared, or file-backed.</li>
+<li><strong>Access Token</strong>: Defines the security context (SID, groups, and privileges). This is where we detect privilege escalation.</li>
+</ul>
+<br>
+<hr>
+<h2 id="2-virtual-memory--address-spaces">2. Virtual Memory &#x26; Address Spaces</h2>
+<p>Memory forensics is essentially the study of the mapping between virtual and physical addresses.</p>
+<h3 id="virtual-vs-physical">Virtual vs. Physical</h3>
+<p>Each process operates in its own <strong>Virtual Address Space</strong>. The CPU and the OS use page tables (PML4 -> PDPT -> PD -> PTE on x64) to translate these virtual addresses into actual physical locations in the RAM dump.</p>
+<h3 id="memory-protection--types">Memory Protection &#x26; Types</h3>
+<p>The VAD tree tracks the protection flags for every page:</p>
+<ul>
+<li><strong>PAGE_READONLY</strong>: Standard for constant data.</li>
+<li><strong>PAGE_EXECUTE_READ</strong>: Standard for code sections.</li>
+<li><strong>PAGE_EXECUTE_READWRITE (RWX)</strong>: A massive red flag. Legitimate code is rarely writable and executable simultaneously; this is the primary indicator for injected shellcode or hollowing.</li>
+</ul>
+<br>
+<hr>
+<h2 id="3-the-pe-portable-executable-standard">3. The PE (Portable Executable) Standard</h2>
+<p>Because a memory dump is just a stream of bytes, you must know the structure of a Windows executable to make sense of it.</p>
+<h3 id="the-header-hierarchy">The Header Hierarchy</h3>
+<p><code>DOS Header</code> -> <code>NT Headers</code> -> <code>Optional Header</code> -> <code>Section Table</code></p>
+<h3 id="critical-analysis-points">Critical Analysis Points</h3>
+<ul>
+<li><strong>The IAT (Import Address Table)</strong>: On disk, the IAT contains names of functions. In memory, these are resolved to absolute addresses. If an IAT entry points to an anonymous memory region instead of a known DLL, the function has been hooked.</li>
+<li><strong>Section Mapping</strong>: The <code>.text</code> section contains the code, while <code>.data</code> and <code>.rsrc</code> contain configuration and resources. Malware often hides its config blobs in the <code>.rsrc</code> section.</li>
+</ul>
+<br>
+<hr>
+<h2 id="4-hiding-techniques--detection-theory">4. Hiding Techniques &#x26; Detection Theory</h2>
+<p>Modern malware avoids the “loud” methods of the past. An analyst must know the a-priori hiding techniques to choose the right detection tool.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Evasion Technique</th><th>Mechanism</th><th>Forensic Detection</th></tr></thead><tbody><tr><td><strong>DKOM</strong></td><td>Unlinks <code>_EPROCESS</code> from <code>ActiveProcessLinks</code></td><td><code>pslist</code> (linked) vs <code>psscan</code> (pool scan)</td></tr><tr><td><strong>Ldr Unlinking</strong></td><td>Removes DLL from PEB module list</td><td><code>dlllist</code> (PEB) vs <code>ldrmodules</code> (VAD)</td></tr><tr><td><strong>Process Hollowing</strong></td><td>Replaces legitimate image with malicious code</td><td><code>malfind</code> (RWX + MZ) or <code>hollowprocesses</code></td></tr><tr><td><strong>API Hooking</strong></td><td>Redirects function calls to malicious code</td><td><code>apihooks</code> or manual IAT pointer audit</td></tr></tbody></table>
+<br>
+<hr>
+<h2 id="-the-analysts-learning-path">🏁 The Analyst’s Learning Path</h2>
+<p>To master memory forensics, study these topics in the following order:</p>
+<ol>
+<li><strong>PE Format &#x26; x86/x64 Basics</strong> -> Understand how binaries are structured.</li>
+<li><strong>Process Internals</strong> -> Master the <code>_EPROCESS</code> and <code>PEB</code> relationship.</li>
+<li><strong>Virtual Memory</strong> -> Understand page tables and the VAD tree.</li>
+<li><strong>Volatility Plugins</strong> -> Start with <code>pslist</code> -> <code>malfind</code> -> <code>netscan</code> -> <code>vadinfo</code>.</li>
+<li><strong>Evasion Techniques</strong> -> Study DKOM, Hollowing, and Reflective Loading.</li>
+</ol>
+<p><strong>Recommended Resource:</strong> The “Windows Process Internals” series by Kirtar Oza for deep-dives into kernel offsets and WinDbg examples.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>

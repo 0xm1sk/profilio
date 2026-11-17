@@ -332,9 +332,37 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"advanced-memory-analysis.md": {
+	id: "advanced-memory-analysis.md";
+  slug: "advanced-memory-analysis";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"architecture-of-failure.md": {
+	id: "architecture-of-failure.md";
+  slug: "architecture-of-failure";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "aslr.md": {
 	id: "aslr.md";
   slug: "aslr";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"cicd-secret-leakage.md": {
+	id: "cicd-secret-leakage.md";
+  slug: "cicd-secret-leakage";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"cisco-ios-vlan.md": {
+	id: "cisco-ios-vlan.md";
+  slug: "cisco-ios-vlan";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">
@@ -360,6 +388,62 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"detection-engineering-query-craft.md": {
+	id: "detection-engineering-query-craft.md";
+  slug: "detection-engineering-query-craft";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"detection-engineering-sigma.md": {
+	id: "detection-engineering-sigma.md";
+  slug: "detection-engineering-sigma";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"detection-trinity.md": {
+	id: "detection-trinity.md";
+  slug: "detection-trinity";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"dfir-persistence-antiforensics.md": {
+	id: "dfir-persistence-antiforensics.md";
+  slug: "dfir-persistence-antiforensics";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"forensics-malware-intent.md": {
+	id: "forensics-malware-intent.md";
+  slug: "forensics-malware-intent";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"hard-won-defensive-lessons.md": {
+	id: "hard-won-defensive-lessons.md";
+  slug: "hard-won-defensive-lessons";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"host-dfir-methodology.md": {
+	id: "host-dfir-methodology.md";
+  slug: "host-dfir-methodology";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"incident-response-from-alert-to-handover.md": {
+	id: "incident-response-from-alert-to-handover.md";
+  slug: "incident-response-from-alert-to-handover";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "java-oop.md": {
 	id: "java-oop.md";
   slug: "java-oop";
@@ -374,9 +458,37 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"linux-privesc-patterns.md": {
+	id: "linux-privesc-patterns.md";
+  slug: "linux-privesc-patterns";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"memory-forensics-hollowing.md": {
+	id: "memory-forensics-hollowing.md";
+  slug: "memory-forensics-hollowing";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"memory-forensics-prerequisites.md": {
+	id: "memory-forensics-prerequisites.md";
+  slug: "memory-forensics-prerequisites";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "network-architecture.md": {
 	id: "network-architecture.md";
   slug: "network-architecture";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"network-detection-suricata.md": {
+	id: "network-detection-suricata.md";
+  slug: "network-detection-suricata";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">
@@ -409,6 +521,13 @@ declare module 'astro:content' {
   collection: "notes";
   data: InferEntrySchema<"notes">
 } & { render(): Render[".md"] };
+"soc-defensive-lifecycle.md": {
+	id: "soc-defensive-lifecycle.md";
+  slug: "soc-defensive-lifecycle";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
 "stack-frames.md": {
 	id: "stack-frames.md";
   slug: "stack-frames";
@@ -419,6 +538,13 @@ declare module 'astro:content' {
 "virtualization.md": {
 	id: "virtualization.md";
   slug: "virtualization";
+  body: string;
+  collection: "notes";
+  data: InferEntrySchema<"notes">
+} & { render(): Render[".md"] };
+"yara-family-detection.md": {
+	id: "yara-family-detection.md";
+  slug: "yara-family-detection";
   body: string;
   collection: "notes";
   data: InferEntrySchema<"notes">

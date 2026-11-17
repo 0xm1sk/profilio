@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>m1sk@offsec</title><link rel="stylesheet" href="/profilio/_astro/about.Dp_TL4yD.css"></head> <body class="bg-terminal-black text-zinc-300 font-mono"> <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono"> <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim"> <a href="/profilio/" class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono"> <span class="text-terminal-dim">&larr;</span> <span>Home</span> </a> <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
+Session Active | v1.0.1
+</div> </nav> <main>  <div class="max-w-3xl mx-auto p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black"> <header class="mb-12 border-b border-terminal-dim pb-6"> <div class="flex gap-3 mb-4"> <span class="text-xs text-terminal-dim uppercase border border-terminal-dim px-2 py-1"> General </span> <span class="text-xs text-terminal-dim"> Tue Oct 13 2026 </span> </div> <h1 class="text-4xl font-bold glow-text mb-6">The Architecture of Failure: CI/CD &amp; Cloud</h1> <div class="flex flex-wrap gap-2 mb-8">  <span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">architecture</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cicd</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">cloud-security</span><span class="text-[10px] border border-terminal-dim px-2 py-1 text-terminal-dim font-mono">operator-theory</span> </div> </header> <div class="prose prose-invert max-w-none text-zinc-300 leading-relaxed">  <h1 id="the-architecture-of-failure">The Architecture of Failure</h1>
+<p>The central theme of modern infrastructure exploitation is a single recurring realization: <strong>a system that stores or transports data never truly forgets it, and the controls placed on top of it are merely policies with exceptions.</strong></p>
+<p>Whether we are dealing with kernel pseudo-filesystems, container overlays, or Git object stores, the failure is almost always the same: a confusion between the <em>view</em> (what the system shows) and the <em>substrate</em> (what the system actually contains).</p>
+<br>
+<h2 id="1-the-substrate-vs-the-view">1. The Substrate vs. The View</h2>
+<p>The following analyses break down how common technical substrates are misinterpreted as security boundaries.</p>
+<h3 id="process-environments-proc">Process Environments (<code>/proc</code>)</h3>
+<ul>
+<li><strong>The Substrate:</strong> On Linux, every process has a kernel-exposed pseudo-filesystem entry at <code>/proc/&#x3C;pid>/</code>. The <code>environ</code> file is a NUL-separated snapshot of the environment variables present at process start.</li>
+<li><strong>The Failure:</strong> CI runners inject secrets as environment variables for simplicity. These are treated as transient, but they persist for the entire lifetime of the process.</li>
+<li><strong>The Exploit Shape:</strong> Identify the target process -> read <code>/proc/&#x3C;pid>/environ</code> -> grep for credentials. The failure is <strong>secret materialization in a long-lived process</strong>.</li>
+</ul>
+<br>
+<h3 id="container-image-layers">Container Image Layers</h3>
+<ul>
+<li><strong>The Substrate:</strong> Images are an ordered list of content-addressed tarball layers. Deletions in later layers are implemented as <strong>whiteout files</strong> (<code>.wh.&#x3C;name></code>), which mask the lower entry without removing the bytes.</li>
+<li><strong>The Failure:</strong> The assumption that <code>RUN rm secret</code> erases data. It only hides it from the final flattened filesystem.</li>
+<li><strong>The Exploit Shape:</strong> Pull the manifest -> walk every individual layer blob -> extract and grep. The failure is <strong>deletion modeled as masking while storage is append-only</strong>.</li>
+</ul>
+<br>
+<h3 id="cloud-credentials--home-directories">Cloud Credentials &#x26; Home Directories</h3>
+<ul>
+<li><strong>The Substrate:</strong> Cloud SDKs rely on bearer credentials stored in well-known paths (e.g., <code>~/.aws/credentials</code>). Possession of the key equals authority.</li>
+<li><strong>The Failure:</strong> Machine identities are often scoped too broadly and are never rotated because rotation would acknowledge the key’s existence.</li>
+<li><strong>The Exploit Shape:</strong> Enumerate config dirs -> point CLI at the internal endpoint (<code>--endpoint-url</code>) -> enumerate identity and resources. The failure is <strong>standing credentials + excessive scope + no rotation</strong>.</li>
+</ul>
+<br>
+<h3 id="kubernetes-service-account-tokens">Kubernetes Service Account Tokens</h3>
+<ul>
+<li><strong>The Substrate:</strong> Every pod receives a projected JWT token at <code>/var/run/secrets/kubernetes.io/serviceaccount/</code>. The API server validates this identity and enforces RBAC.</li>
+<li><strong>The Failure:</strong> Automounting is enabled by default, and RBAC is often granted broadly “to make things work.”</li>
+<li><strong>The Exploit Shape:</strong> Read the token -> decode the JWT -> enumerate permissions via <code>kubectl auth can-i</code>. The failure is <strong>default-issued identity + over-broad RBAC</strong>.</li>
+</ul>
+<br>
+<h3 id="git-object-model">Git Object Model</h3>
+<ul>
+<li><strong>The Substrate:</strong> Git is a content-addressed object store. Branches and HEAD are just movable pointers. Anything not pointed to is “unreachable” but remains in <code>.git/objects</code> until garbage collected.</li>
+<li><strong>The Failure:</strong> History rewriting (<code>rebase</code>, <code>filter-branch</code>) drops the pointer, not the data.</li>
+<li><strong>The Exploit Shape:</strong> Use <code>git fsck --lost-found</code> to identify dangling blobs -> read raw bytes via <code>git cat-file -p</code>. The failure is <strong>history rewriting as pointer-dropping, not data-deletion</strong>.</li>
+</ul>
+<br>
+<hr>
+<h2 id="2-policy-as-a-list-of-exceptions">2. Policy as a List of Exceptions</h2>
+<p>Security controls in high-automation environments are rarely absolute walls; they are lists of exceptions required for the system to function.</p>
+<h3 id="branch-protection--automation">Branch Protection &#x26; Automation</h3>
+<ul>
+<li><strong>The Reality:</strong> Branch rules (required reviews, CI checks) almost always have carve-outs for bot accounts, specific namespaces (<code>automerge/*</code>), or trusted CI identities.</li>
+<li><strong>The Exploit:</strong> Identify the exception signal (e.g., a specific committer email or a bot token) -> assume that identity -> push to the exempt lane. The failure is <strong>policy with an automation exception reachable by anyone holding the credential</strong>.</li>
+</ul>
+<h3 id="the-trust-chain-paradox">The Trust Chain Paradox</h3>
+<ul>
+<li><strong>The Reality:</strong> A release pipeline builds -> signs -> deploys. The fleet verifies the signature.</li>
+<li><strong>The Failure:</strong> The system conflates the <strong>identity of the signer</strong> with the <strong>integrity of the artifact</strong>. If the pipeline is steered into signing a poisoned artifact, the fleet trusts it implicitly because the signature is valid.</li>
+<li><strong>The Exploit:</strong> Poison a non-protected file the pipeline consumes -> let the pipeline build and sign the payload -> deploy via the exempt lane. The failure is <strong>trusting the signer rather than the human intent</strong>.</li>
+</ul>
+<br>
+<hr>
+<h2 id="3-cross-cutting-methodology">3. Cross-Cutting Methodology</h2>
+<div class="info-callout">
+<strong>The Operator's Process:</strong>
+1. **Enumerate the Substrate:** Identify what exists and who owns it (`ps`, `git fsck`, `kubectl`).
+2. **Identify the Boundary:** Find where data crosses from trusted to untrusted zones.
+3. **Read the Check:** Infer the enforcement logic and find the "carve-out" or exception.
+4. **Steer the Machinery:** Don't fight the system; use the target's own trusted processes (the pipeline, the signer, the fleet) to do the work.
+</div>
+<div class="warning-callout">
+<strong>Recurring Failure Mode:</strong>
+The most reliable exploits occur when we recognize that systems model deletion as "stop pointing at it," controls as "a list of exceptions," and trust as "a valid signature."
+</div>
+<br>
+<p><strong>Key Toolkit for this Architecture:</strong>
+<code>ps</code>, <code>/proc</code>, <code>git fsck</code>, <code>kubectl</code>, <code>Registry API</code>, <code>aws-cli</code>, <code>trufflehog</code>.</p>  </div> </div>  </main> <footer class="mt-24 pb-12 text-center text-xs text-terminal-dim opacity-50"> <p>(c) 2026 m1sk // EOF</p> </footer> </div> </body></html>
