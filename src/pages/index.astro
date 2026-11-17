@@ -1,36 +1,48 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
 import { url } from '@/utils/url';
+
+const notes = await getCollection('notes');
+const recent = notes
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+
+const topics = [
+  'x86-64', 'Binary Exploitation', 'Memory Forensics',
+  'Detection Engineering', 'Incident Response', 'Active Directory',
+];
+
+const focusLinks = [
+  { path: 'notes/detection-engineering-query-craft', label: 'Detection engineering' },
+  { path: 'notes/incident-response-from-alert-to-handover', label: 'Incident response' },
+  { path: 'notes/stack-frames', label: 'Low-level systems' },
+];
 ---
 
 <MainLayout title="Home">
 <div class="min-h-screen p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
-  <!-- Header -->
   <header class="mb-16 border-b border-terminal-dim pb-6 max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold glow-text mb-3">m1sk@offsec:~$ whoami</h1>
     <p class="text-lg text-zinc-400">Building toward offensive security research.</p>
   </header>
 
-  <!-- Main Content -->
   <div class="max-w-5xl mx-auto space-y-16">
-    
+
     <!-- Introduction -->
     <section class="space-y-6">
       <p class="text-xl text-zinc-300 leading-relaxed max-w-3xl">
         I study how systems work, how they fail, and how those failures can be reproduced and understood.
       </p>
       <div class="flex flex-wrap gap-3 text-xs">
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[x86-64]</span>
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[Linux Internals]</span>
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[Reverse Engineering]</span>
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[Pwn]</span>
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[Active Directory]</span>
-        <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[Web Security]</span>
+        {topics.map(topic => (
+          <span class="terminal-border px-3 py-1 text-terminal-dim bg-terminal-gray rounded-sm">[{topic}]</span>
+        ))}
       </div>
     </section>
 
     <!-- Navigation Grid -->
-    <nav class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <nav class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" aria-label="Site sections">
       <a href={url('research')} class="terminal-border terminal-bg p-6 text-center transition-all group hover:border-terminal-phosphor">
         <div class="text-terminal-dim group-hover:text-terminal-phosphor mb-2 text-xs uppercase tracking-widest">/investigate</div>
         <div class="font-bold text-white group-hover:text-white text-lg">Research</div>
@@ -61,7 +73,7 @@ import { url } from '@/utils/url';
       </a>
     </nav>
 
-    <!-- Current Learning Area -->
+    <!-- Current focus -->
     <section class="terminal-border terminal-bg p-8">
       <h2 class="text-sm font-bold uppercase text-terminal-dim mb-6 border-b border-terminal-dim pb-2 tracking-widest">Currently Learning</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -70,7 +82,7 @@ import { url } from '@/utils/url';
             <span class="w-2 h-2 bg-terminal-phosphor"></span> Offensive Track
           </h3>
           <p class="text-sm text-zinc-400 leading-relaxed">
-            Deep diving into x86-64 calling conventions and stack frames via GDB.
+            Calling conventions, stack frames, and memory-corruption primitives via GDB.
           </p>
         </div>
         <div class="space-y-3">
@@ -78,9 +90,40 @@ import { url } from '@/utils/url';
             <span class="w-2 h-2 bg-terminal-dim"></span> Defensive Track
           </h3>
           <p class="text-sm text-zinc-400 leading-relaxed">
-            Exploring Sysmon logging and KQL for threat hunting.
+            Detection engineering with Sigma and KQL, and the full incident-response lifecycle.
           </p>
         </div>
+      </div>
+      <div class="flex flex-wrap gap-2 mt-8">
+        {focusLinks.map(link => (
+          <a href={url(link.path)} class="text-[10px] text-terminal-phosphor border border-terminal-dim px-2 py-1 hover:border-terminal-phosphor transition-colors">
+            {link.label} &rarr;
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Recent notes (generated from the notes collection) -->
+    <section>
+      <div class="flex items-end justify-between mb-6 border-b border-terminal-dim pb-3">
+        <h2 class="text-sm font-bold uppercase text-terminal-dim tracking-widest">Latest notes</h2>
+        <a href={url('notes')} class="text-[10px] text-terminal-phosphor hover:underline uppercase tracking-widest">all notes &rarr;</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {recent.map(note => (
+          <a href={url('notes/' + note.slug)} class="terminal-border terminal-bg p-5 transition-colors hover:border-terminal-phosphor">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <h3 class="text-white text-sm font-bold">{note.data.title}</h3>
+              <span class="text-[9px] text-terminal-dim shrink-0">{note.data.date.toISOString().slice(0, 10)}</span>
+            </div>
+            <p class="text-xs text-zinc-400 line-clamp-2 mb-3">{note.data.description || ''}</p>
+            <div class="flex flex-wrap gap-1">
+              {note.data.tags?.slice(0, 3).map(tag => (
+                <span class="text-[9px] text-terminal-dim border border-terminal-dim px-1">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
       </div>
     </section>
   </div>

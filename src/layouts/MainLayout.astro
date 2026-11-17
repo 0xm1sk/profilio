@@ -9,6 +9,22 @@ const {
 } = Astro.props;
 
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(assetPath('og-image.png'), Astro.site).href;
+
+const navLinks = [
+  { path: 'notes', label: 'Notes' },
+  { path: 'writeups', label: 'Writeups' },
+  { path: 'research', label: 'Research' },
+  { path: 'projects', label: 'Projects' },
+  { path: 'tools', label: 'Tools' },
+  { path: 'progress', label: 'Progress' },
+  { path: 'about', label: 'About' },
+];
+
+function isActive(path) {
+  return Astro.url.pathname.startsWith(url(path));
+}
 ---
 
 <!doctype html>
@@ -19,20 +35,37 @@ const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#080808" />
+    <link rel="canonical" href={canonical.href} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteTitle} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="icon" type="image/svg+xml" href={assetPath('favicon.svg')} />
   </head>
   <body class="bg-terminal-black text-zinc-300 font-mono">
     <div class="min-h-screen bg-terminal-black text-zinc-300 font-mono">
-      <nav class="max-w-5xl mx-auto p-4 md:p-6 flex justify-between items-center border-b border-terminal-dim">
-        <a href={url()} class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono">
-          <span class="text-terminal-dim">&larr;</span>
-          <span>Home</span>
+      <nav class="max-w-5xl mx-auto px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-terminal-dim">
+        <a href={url()} class="text-terminal-phosphor hover:text-white transition-colors flex items-center gap-2 text-sm font-mono font-bold">
+          <span class="text-terminal-dim">&gt;_</span>
+          <span>m1sk</span>
         </a>
-        <div class="text-[10px] text-terminal-dim uppercase tracking-widest">
-          Session Active | v1.0.1
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+          {navLinks.map(link => (
+            <a
+              href={url(link.path)}
+              aria-current={isActive(link.path) ? 'page' : undefined}
+              class={`transition-colors ${isActive(link.path) ? 'text-terminal-phosphor' : 'text-terminal-dim hover:text-white'}`}
+            >
+              {link.label}
+            </a>
+          ))}
         </div>
       </nav>
 

@@ -2,6 +2,7 @@
 import MainLayout from '@/layouts/MainLayout.astro';
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { getCollection } from 'astro:content';
+import { url } from '@/utils/url';
 
 export async function getStaticPaths() {
   const notes = await getCollection('notes');
@@ -13,8 +14,41 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const allNotes = await getCollection('notes');
+
+const currentTags = new Set(entry.data.tags || []);
+const related = allNotes
+  .filter(n => n.slug !== entry.slug)
+  .map(n => {
+    const shared = (n.data.tags || []).filter(tag => currentTags.has(tag));
+    return { entry: n, shared };
+  })
+  .filter(n => n.shared.length > 0)
+  .sort((a, b) => b.shared.length - a.shared.length || b.entry.data.date.valueOf() - a.entry.data.date.valueOf())
+  .slice(0, 4);
 ---
 
 <ContentLayout frontmatter={entry.data}>
   <Content />
+
+  {related.length > 0 && (
+    <aside class="mt-16 pt-8 border-t border-terminal-dim">
+      <h2 class="text-sm font-bold uppercase tracking-widest text-terminal-dim mb-6">
+        Related notes
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {related.map(({ entry: note, shared }) => (
+          <a href={url('notes/' + note.slug)} class="terminal-border terminal-bg p-4 transition-colors hover:border-terminal-phosphor">
+            <div class="text-white text-sm font-bold mb-1">{note.data.title}</div>
+            <div class="text-xs text-zinc-400 line-clamp-2 mb-3">{note.data.description || ''}</div>
+            <div class="flex flex-wrap gap-1">
+              {shared.slice(0, 3).map(tag => (
+                <span class="text-[9px] text-terminal-phosphor border border-terminal-dim px-1">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </aside>
+  )}
 </ContentLayout>

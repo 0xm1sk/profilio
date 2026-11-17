@@ -25,6 +25,9 @@ const notes = rawNotes
     category: entry.data.category || entry.data.tags?.[0] || 'General',
     snippet: makeSnippet(entry),
     tagString: (entry.data.tags || []).join(' '),
+    searchText: [entry.data.title, entry.data.description || '', entry.data.category || '', (entry.data.tags || []).join(' ')]
+      .join(' ')
+      .toLowerCase(),
   }));
 
 const tagCounts = new Map();
@@ -43,8 +46,21 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeC
       <p class="text-lg text-zinc-400">Atomic technical references and knowledge base.</p>
     </header>
 
-    <!-- Tag filters (client-side; query string is not known at static build time) -->
-    <nav class="flex flex-wrap items-center gap-2 mb-6" aria-label="Filter notes by tag">
+    <!-- Search (client-side; query string is not known at static build time) -->
+    <div class="relative mb-4">
+      <span class="absolute left-3 top-1/2 -translate-y-1/2 text-terminal-dim text-sm">$</span>
+      <input
+        id="note-search"
+        type="search"
+        autocomplete="off"
+        placeholder="grep notes... (title, topic, tag)"
+        aria-label="Search notes"
+        class="w-full terminal-border terminal-bg text-sm text-white placeholder:text-terminal-dim pl-8 pr-4 py-3 outline-none focus:border-terminal-phosphor"
+      />
+    </div>
+
+    <!-- Tag filters -->
+    <nav class="flex flex-wrap items-center gap-2 mb-4" aria-label="Filter notes by tag">
       <a href="?" data-tag-filter="" class="text-[10px] uppercase border border-terminal-dim text-terminal-dim px-2 py-1 transition-colors hover:text-white">
         all [{notes.length}]
       </a>
@@ -57,9 +73,9 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeC
 
     <p id="filter-status" class="text-xs text-terminal-dim mb-6 uppercase tracking-widest" aria-live="polite"></p>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {notes.map((entry) => (
-        <a href={url('notes/' + entry.slug)} data-note-card data-tags={entry.tagString} class="p-6 hover:text-white transition-all block border border-terminal-dim hover:border-terminal-phosphor">
+        <a href={url('notes/' + entry.slug)} data-note-card data-tags={entry.tagString} data-search={entry.searchText} class="p-6 hover:text-white transition-all block border border-terminal-dim hover:border-terminal-phosphor">
           <div class="block font-bold text-white mb-1">{entry.data.title}</div>
           <div class="block text-[10px] text-terminal-dim uppercase mb-3">{entry.category}</div>
           <div class="block text-sm text-zinc-400 mb-4">{entry.snippet}...</div>
@@ -72,25 +88,33 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeC
       ))}
     </div>
 
-    <p id="empty-state" class="text-terminal-dim italic hidden">No notes found for this tag.</p>
+    <p id="empty-state" class="text-terminal-dim italic hidden">No notes match that search.</p>
   </div>
 
   <script is:inline>
     (function () {
       var cards = Array.prototype.slice.call(document.querySelectorAll('[data-note-card]'));
       var chips = Array.prototype.slice.call(document.querySelectorAll('[data-tag-filter]'));
+      var search = document.getElementById('note-search');
       var status = document.getElementById('filter-status');
       var empty = document.getElementById('empty-state');
 
       function apply() {
         var tag = new URLSearchParams(window.location.search).get('tag');
+        var query = (search ? search.value : '').trim().toLowerCase();
         var shown = 0;
+
         cards.forEach(function (card) {
           var tags = (card.getAttribute('data-tags') || '').split(' ');
-          var visible = !tag || tags.indexOf(tag) !== -1;
+          var haystack = card.getAttribute('data-search') || '';
+          var tagMatch = !tag || tags.indexOf(tag) !== -1;
+          var terms = query.split(/\s+/).filter(Boolean);
+          var searchMatch = terms.every(function (term) { return haystack.indexOf(term) !== -1; });
+          var visible = tagMatch && searchMatch;
           card.style.display = visible ? '' : 'none';
           if (visible) shown++;
         });
+
         chips.forEach(function (chip) {
           var active = (chip.getAttribute('data-tag-filter') || '') === (tag || '');
           chip.classList.toggle('border-terminal-phosphor', active);
@@ -98,9 +122,13 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeC
           chip.classList.toggle('border-terminal-dim', !active);
           chip.classList.toggle('text-terminal-dim', !active);
         });
+
         if (status) {
-          status.textContent = tag
-            ? 'Filtering by ' + tag + ' — ' + shown + ' note' + (shown === 1 ? '' : 's')
+          var parts = [];
+          if (tag) parts.push('tag: ' + tag);
+          if (query) parts.push('query: "' + query + '"');
+          status.textContent = parts.length
+            ? parts.join('  ·  ') + '  —  ' + shown + ' note' + (shown === 1 ? '' : 's')
             : '';
         }
         if (empty) empty.classList.toggle('hidden', shown !== 0);
@@ -114,6 +142,7 @@ const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeC
         });
       });
 
+      if (search) search.addEventListener('input', apply);
       window.addEventListener('popstate', apply);
       apply();
     })();

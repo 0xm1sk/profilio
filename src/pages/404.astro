@@ -1,0 +1,32 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { url } from '@/utils/url';
+---
+
+<MainLayout title="404 — Signal Lost">
+  <div class="min-h-[70vh] flex items-center justify-center p-6 md:p-12 font-mono text-terminal-phosphor bg-terminal-black">
+    <div class="max-w-xl w-full terminal-border terminal-bg p-8 md:p-12">
+      <div class="text-terminal-dim text-sm mb-2">$ cat /profilio/that-page</div>
+      <div class="text-white text-sm mb-8">cat: no such file or directory</div>
+
+      <div class="glow-text text-7xl md:text-9xl font-bold mb-6">404</div>
+      <h1 class="text-2xl text-white font-bold mb-4">Signal lost.</h1>
+      <p class="text-zinc-400 leading-relaxed mb-10">
+        The page you were looking for isn't in this archive. It may have moved, been renamed, or never existed in the first place.
+      </p>
+
+      <div class="flex flex-wrap gap-3">
+        <a href={url()} class="terminal-border px-4 py-2 text-sm text-terminal-phosphor hover:bg-terminal-phosphor hover:text-terminal-black transition-colors">
+          [ back to home ]
+        </a>
+        <a href={url('notes')} class="terminal-border px-4 py-2 text-sm text-terminal-phosphor hover:bg-terminal-phosphor hover:text-terminal-black transition-colors">
+          [ browse notes ]
+        </a>
+      </div>
+
+      <div class="mt-12 pt-6 border-t border-terminal-dim text-[10px] text-terminal-dim uppercase tracking-widest">
+        error code: ENOENT &middot; status: 404 &middot; archive: intact
+      </div>
+    </div>
+  </div>
+</MainLayout>
