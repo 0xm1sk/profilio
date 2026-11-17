@@ -1,7 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* Tailwind layers are injected by @astrojs/tailwind; this file holds only the
+   custom terminal theme rules, and is imported once in MainLayout. */
 :root {
   --terminal-black: #080808;
   --terminal-dim: #262626;
@@ -45,6 +43,11 @@ article h1, article h2, article h3 {
 
 .terminal-bg {
   background-color: var(--terminal-gray) !important;
+}
+
+/* Used across cards and rows — actually draw the border the theme expects. */
+.terminal-border {
+  border: 1px solid var(--terminal-dim);
 }
 
 /* Code blocks: Distinct and readable */

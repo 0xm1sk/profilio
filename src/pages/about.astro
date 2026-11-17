@@ -1,28 +1,56 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
+import { url } from '@/utils/url';
+
+const focus = [
+  { label: 'Binary Exploitation', tag: 'exploit-dev' },
+  { label: 'Memory Forensics', tag: 'memory' },
+  { label: 'Detection Engineering', tag: 'detection-engineering' },
+  { label: 'Incident Response', tag: 'incident-response' },
+  { label: 'Active Directory', tag: 'ad' },
+  { label: 'Networking', tag: 'networking' },
+];
+
+const sections = [
+  { path: 'research', label: 'Research', hint: 'investigations' },
+  { path: 'writeups', label: 'Writeups', hint: 'proof of work' },
+  { path: 'projects', label: 'Projects', hint: 'things built' },
+  { path: 'notes', label: 'Notes', hint: 'knowledge base' },
+  { path: 'tools', label: 'Tools', hint: 'the arsenal' },
+];
 ---
 
-<MainLayout title="About">
+<MainLayout title="About" description="Who is behind m1sk — a security learner and researcher focused on low-level systems, exploitation, and defense.">
   <div class="max-w-3xl mx-auto p-4 md:p-8 font-mono text-terminal-phosphor bg-terminal-black">
-    <header class="mb-12 border-b border-terminal-dim pb-4">
+    <header class="mb-10 border-b border-terminal-dim pb-4">
       <h1 class="text-2xl font-bold glow-text mb-2">/about</h1>
       <p class="text-terminal-dim">Digital identity: m1sk</p>
     </header>
 
-    <div class="space-y-8 text-zinc-300 leading-relaxed">
+    <!-- Terminal-style identity block -->
+    <div class="terminal-border terminal-bg p-6 mb-12 text-sm">
+      <div class="text-terminal-dim">$ whoami</div>
+      <div class="text-white mb-4">m1sk <span class="text-terminal-dim">// security learner &amp; researcher in training</span></div>
+      <div class="text-terminal-dim">$ cat focus</div>
+      <div class="text-white mb-4">low-level systems, binary exploitation, detection &amp; response</div>
+      <div class="text-terminal-dim">$ cat affiliation</div>
+      <div class="text-white">BreachLab crew <span class="text-terminal-dim">// operators, not checklists</span></div>
+    </div>
+
+    <div class="space-y-10 text-zinc-300 leading-relaxed">
       <section class="space-y-4">
         <p>
           I am a security learner and researcher in training. My focus is not on using tools, but on understanding the underlying systems they interact with.
         </p>
         <p>
-          I am drawn to low-level security because it is where the "truth" of the machine lives. To me, binary exploitation is not about a "flag" - it is about understanding the exact moment a program's logic fails and figuring out how to reproduce that failure reliably.
+          I am drawn to low-level security because it is where the "truth" of the machine lives. To me, binary exploitation is not about a "flag" — it is about understanding the exact moment a program's logic fails and figuring out how to reproduce that failure reliably.
         </p>
       </section>
 
       <section class="space-y-4">
         <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Affiliation</h2>
         <p>
-          I am a member of the <a href="https://breachlab.org" class="text-terminal-phosphor hover:underline">BreachLab crew</a>. 
+          I am a member of the <a href="https://breachlab.org" class="text-terminal-phosphor hover:underline">BreachLab crew</a>.
         </p>
         <p>
           BreachLab is more than a platform; it's a rejection of the corporate certification industry. We build environments for <span class="text-white italic">operators</span>—people who value raw shells and broken servers over checklists and multiple-choice quizzes. From persistent Linux root boxes to ephemeral k3s clusters for pod escape and cluster takeover, we provide the signal and the systems that fight back.
@@ -30,10 +58,36 @@ import MainLayout from '@/layouts/MainLayout.astro';
       </section>
 
       <section class="space-y-4">
+        <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Current focus</h2>
+        <p class="text-sm text-zinc-400">
+          Pick a thread — each tag opens the notes archive already filtered to that topic.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {focus.map((item) => (
+            <a href={`${url('notes')}?tag=${encodeURIComponent(item.tag)}`} class="terminal-border px-3 py-1 text-xs text-terminal-phosphor hover:bg-terminal-phosphor hover:text-terminal-black transition-colors">
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="space-y-4">
         <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Methodology</h2>
         <p>
-          I approach learning by breaking things. I spend my time in GDB, analyzing stack frames, and experimenting with memory corruption. I document my process - including the mistakes and the "dead ends" - because the path to the solve is more valuable than the solve itself.
+          I approach learning by breaking things. I spend my time in GDB, analyzing stack frames, and experimenting with memory corruption. I document my process — including the mistakes and the "dead ends" — because the path to the solve is more valuable than the solve itself.
         </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Explore the archive</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {sections.map((section) => (
+            <a href={url(section.path)} class="terminal-border terminal-bg p-4 transition-colors hover:border-terminal-phosphor">
+              <div class="text-white text-sm font-bold">{section.label}</div>
+              <div class="text-[10px] text-terminal-dim uppercase tracking-wider mt-1">{section.hint}</div>
+            </a>
+          ))}
+        </div>
       </section>
 
       <section class="space-y-4">
@@ -41,6 +95,15 @@ import MainLayout from '@/layouts/MainLayout.astro';
         <p>
           My long-term direction is toward offensive security research. I want to move from solving known challenges to investigating unknown vulnerabilities in complex systems.
         </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Elsewhere</h2>
+        <div class="flex flex-wrap gap-4 text-sm">
+          <a href="https://github.com/0xm1sk" class="text-terminal-phosphor hover:underline">GitHub &rarr;</a>
+          <a href="https://breachlab.org" class="text-terminal-phosphor hover:underline">BreachLab &rarr;</a>
+          <a href={url('progress')} class="text-terminal-phosphor hover:underline">Progress &rarr;</a>
+        </div>
       </section>
     </div>
   </div>

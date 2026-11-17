@@ -1,63 +1,186 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
+import { url } from '@/utils/url';
+
+const updated = '17 Nov 2026';
+
+const statusMeta = {
+  done: { label: '[DONE]', badge: 'text-terminal-phosphor', row: 'border-l-2 border-l-terminal-phosphor' },
+  active: { label: '[ACTIVE]', badge: 'text-white animate-pulse', row: 'border-l-4 border-l-terminal-phosphor' },
+  next: { label: '[NEXT]', badge: 'text-terminal-dim', row: 'border-l-2 border-l-terminal-dim opacity-60' },
+};
+
+const tracks = [
+  {
+    name: 'Offensive Path',
+    items: [
+      {
+        status: 'done',
+        title: 'Fundamentals',
+        detail: 'C memory model, x86-64 registers, GDB basics.',
+        notes: [
+          { slug: 'rip', label: 'RIP' },
+          { slug: 'rsp', label: 'RSP' },
+          { slug: 'stack-frames', label: 'Stack frames' },
+        ],
+      },
+      {
+        status: 'active',
+        title: 'Low-Level Exploration',
+        detail: 'Calling conventions, stack frames, buffer overflows, and ret2win.',
+        notes: [
+          { slug: 'aslr', label: 'ASLR' },
+          { slug: 'dep-nx', label: 'DEP / NX' },
+          { slug: 'stack-frames', label: 'Stack frames' },
+        ],
+      },
+      {
+        status: 'next',
+        title: 'Advanced Pwn',
+        detail: 'ROP chains, ASLR/PIE bypasses, and heap exploitation.',
+        notes: [
+          { slug: 'dep-nx', label: 'ROP primer' },
+          { slug: 'advanced-memory-analysis', label: 'Memory analysis' },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Defensive Path',
+    items: [
+      {
+        status: 'done',
+        title: 'Networking Basics',
+        detail: 'TCP/IP, the OSI model, and packet analysis.',
+        notes: [
+          { slug: 'osi-model', label: 'OSI model' },
+          { slug: 'networking-basics', label: 'Packet Tracer' },
+          { slug: 'network-architecture', label: 'Topologies' },
+        ],
+      },
+      {
+        status: 'active',
+        title: 'Detection Engineering & IR',
+        detail: 'KQL/OpenSearch query craft, behavior-based rules, SIEM triage, scoping and handover.',
+        notes: [
+          { slug: 'detection-engineering-query-craft', label: 'Query craft' },
+          { slug: 'detection-engineering-sigma', label: 'Sigma' },
+          { slug: 'detection-trinity', label: 'Trinity' },
+          { slug: 'incident-response-from-alert-to-handover', label: 'IR lifecycle' },
+          { slug: 'hard-won-defensive-lessons', label: 'Lessons' },
+        ],
+      },
+      {
+        status: 'active',
+        title: 'DFIR & Threat Hunting',
+        detail: 'Memory forensics, persistence techniques, and family-level detection.',
+        notes: [
+          { slug: 'host-dfir-methodology', label: 'Host DFIR' },
+          { slug: 'memory-forensics-hollowing', label: 'Hollowing' },
+          { slug: 'dfir-persistence-antiforensics', label: 'Persistence' },
+          { slug: 'yara-family-detection', label: 'YARA' },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Platforms & Infrastructure',
+    items: [
+      {
+        status: 'done',
+        title: 'Virtualization & Containers',
+        detail: 'Hypervisors, namespaces, cgroups, and layered images.',
+        notes: [
+          { slug: 'virtualization', label: 'Hypervisors' },
+          { slug: 'containerization', label: 'Containers' },
+          { slug: 'kubernetes', label: 'Kubernetes' },
+        ],
+      },
+      {
+        status: 'done',
+        title: 'CI/CD & Cloud',
+        detail: 'Pipeline trust boundaries and secret leakage.',
+        notes: [
+          { slug: 'architecture-of-failure', label: 'Failure modes' },
+          { slug: 'cicd-secret-leakage', label: 'Secret leakage' },
+        ],
+      },
+      {
+        status: 'active',
+        title: 'Active Directory',
+        detail: 'Kerberos, identity, and operator methodology.',
+        notes: [
+          { slug: 'active-directory-labs', label: 'Foundations' },
+          { slug: 'ad-operator-theory', label: 'Operator theory' },
+        ],
+      },
+    ],
+  },
+];
+
+function percent(items) {
+  const done = items.filter(item => item.status === 'done').length;
+  return Math.round((done / items.length) * 100);
+}
+
+const activeNow = tracks
+  .flatMap(track => track.items)
+  .filter(item => item.status === 'active')
+  .map(item => item.title);
 ---
 
-<MainLayout title="Progress">
+<MainLayout title="Progress" description="A living roadmap of the offensive, defensive, and infrastructure topics m1sk is working through.">
   <div class="max-w-3xl mx-auto p-4 md:p-8 font-mono text-terminal-phosphor bg-terminal-black">
-    <header class="mb-12 border-b border-terminal-dim pb-4">
+    <header class="mb-10 border-b border-terminal-dim pb-4">
       <h1 class="text-2xl font-bold glow-text mb-2">/progress</h1>
       <p class="text-terminal-dim">Technical trajectory towards Offensive Security Research.</p>
     </header>
 
-    <div class="space-y-12">
-      <!-- Offensive Track -->
-      <section class="space-y-6">
-        <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">Offensive Path</h2>
-        <div class="space-y-4">
-          <div class="flex items-start gap-4 p-3 terminal-border terminal-bg">
-            <span class="text-terminal-phosphor font-bold">[DONE]</span>
-            <div>
-              <h3 class="text-white text-sm font-bold">Fundamentals</h3>
-              <p class="text-xs text-terminal-dim">C memory model, basic x86-64 registers, GDB basics.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4 p-3 terminal-border terminal-bg border-l-4 border-l-terminal-phosphor">
-            <span class="text-white font-bold animate-pulse">[ACTIVE]</span>
-            <div>
-              <h3 class="text-white text-sm font-bold">Low-Level Exploration</h3>
-              <p class="text-xs text-terminal-dim">Calling conventions, stack frames, basic buffer overflows, and ret2win.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4 p-3 terminal-border terminal-bg opacity-50">
-            <span class="text-terminal-dim font-bold">[NEXT]</span>
-            <div>
-              <h3 class="text-white text-sm font-bold">Advanced Pwn</h3>
-              <p class="text-xs text-terminal-dim">ROP chains, ASLR/PIE bypasses, and Heap exploitation.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Blue Team Track -->
-      <section class="space-y-6">
-        <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-dim pl-3">Defensive/Blue Track</h2>
-        <div class="space-y-4">
-          <div class="flex items-start gap-4 p-3 terminal-border terminal-bg">
-            <span class="text-terminal-phosphor font-bold">[DONE]</span>
-            <div>
-              <h3 class="text-white text-sm font-bold">Networking Basics</h3>
-              <p class="text-xs text-terminal-dim">TCP/IP, OSI Model, Packet Analysis.</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4 p-3 terminal-border terminal-bg border-l-4 border-l-terminal-dim">
-            <span class="text-white font-bold animate-pulse">[ACTIVE]</span>
-            <div>
-              <h3 class="text-white text-sm font-bold">Detection Engineering &amp; IR</h3>
-              <p class="text-xs text-terminal-dim">KQL/OpenSearch query craft, behavior-based rules, SIEM triage, scoping, containment and handover.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div class="info-callout mb-12">
+      <strong>Current focus:</strong> {activeNow.join(' · ')}
     </div>
+
+    <div class="space-y-12">
+      {tracks.map((track) => (
+        <section class="space-y-6">
+          <div>
+            <h2 class="text-white font-bold uppercase text-sm border-l-2 border-terminal-phosphor pl-3">{track.name}</h2>
+            <div class="mt-4 flex items-center gap-3">
+              <span class="text-[10px] text-terminal-dim uppercase tracking-widest">progress</span>
+              <div class="h-1 flex-1 bg-terminal-dim">
+                <div class="h-1 bg-terminal-phosphor" style={`width: ${percent(track.items)}%`}></div>
+              </div>
+              <span class="text-[10px] text-terminal-phosphor">{percent(track.items)}%</span>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            {track.items.map((item) => (
+              <div class={`terminal-border terminal-bg p-3 ${statusMeta[item.status].row}`}>
+                <div class="flex items-start gap-4">
+                  <span class={`${statusMeta[item.status].badge} font-bold shrink-0`}>{statusMeta[item.status].label}</span>
+                  <div class="min-w-0">
+                    <h3 class="text-white text-sm font-bold">{item.title}</h3>
+                    <p class="text-xs text-terminal-dim mt-1">{item.detail}</p>
+                    <div class="flex flex-wrap gap-1 mt-3">
+                      {item.notes.map((note) => (
+                        <a href={url('notes/' + note.slug)} class="text-[9px] text-terminal-dim border border-terminal-dim px-1 transition-colors hover:text-terminal-phosphor hover:border-terminal-phosphor">
+                          {note.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <footer class="mt-12 border-t border-terminal-dim pt-6 flex flex-wrap justify-between gap-2 text-[10px] text-terminal-dim uppercase tracking-widest">
+      <span>[DONE] completed &nbsp; [ACTIVE] in progress &nbsp; [NEXT] queued</span>
+      <span>snapshot: {updated}</span>
+    </footer>
   </div>
 </MainLayout>
